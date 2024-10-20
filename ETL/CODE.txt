@@ -1,0 +1,219 @@
+
+-------CREATION OF THE DOCKER CONTAINER--------------------------------------------------------------------------------------------------------------------
+-- C:\Users\Estudiante> & docker run --name DB_Class `
+-- >>   -e POSTGRES_PASSWORD=tito123 `
+-- >>   -p 5432:5432 `
+-- >>   -e POSTGRES_USER=tito `
+-- >>   -e POSTGRES_DB=DBProject `
+-- >>   -v "C:\Users\Estudiante\Desktop\University\Sexto_Year\Semester_1\DB\Project\Data:/var/lib/postgresql/data" `
+-- >>   -d `
+-- >>   postgres
+
+---------------------------------------------------------------------------------------------------------------------------
+
+
+-- CREATE EXTENSION IF NOT EXISTS vector; --CREATING THE VECTOR DATATYPE
+
+----CREATION OF THE TABLES-----------------------------------------------------------------------------------------------------------------------
+
+-- CREATE TABLE  CLASS(cid serial PRIMARY KEY ,cname varchar(100),ccode varchar(100),cdesc TEXT,
+-- term varchar(100),years varchar(100),cred int, csyllabus TEXT);
+-- CREATE TABLE ROOM(rid serial Primary Key, building varchar(100),room_number varchar(100), capacity int);
+-- CREATE TABLE MEETING(mid serial Primary Key, ccode varchar(100),starttime TIME,endtime TIME, cdays varchar(5));
+-- CREATE TABLE requisite (
+--     classid INTEGER REFERENCES class(cid),
+--     reqid INTEGER REFERENCES class(cid),
+--     prereq BOOLEAN,
+--     PRIMARY KEY (classid, reqid)
+-- );
+-- CREATE TABLE SYLLABUS(chunkid serial Primary Key,courseid int references CLASS(cid),embedding_text vector,chunk varchar(100));
+-- CREATE TABLE SECTION(sid serial Primary key,roomid int references Room(rid),
+--                      cid int references Class(cid),mid int references MEETING(mid),
+--                     semester varchar(100),years varchar(100),capacity int);
+
+---------------------------------------------------------------------------------------------------------------------------
+-------UPLOADING THE DATA INTO THE TABLES CALLED MEETING, CLASS AND ROOM--------------------------------------------------------------------------------------------------------------------
+
+-- COPY meeting
+-- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/meeting.csv'
+-- DELIMITER ','
+-- CSV HEADER;
+
+-- COPY class (cid,cname,ccode,cdesc,term,years,cred,csyllabus)
+-- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/courses.csv'
+-- DELIMITER ','
+-- CSV HEADER;
+
+-- COPY room(rid,building, room_number, capacity)
+-- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/rooms.csv'
+-- DELIMITER ','
+-- CSV HEADER;
+---------------------------------------------------------------------------------------------------------------------------
+
+-------UPLOADING AND FILTERING THE DATA FOR THE TABLE REQUISITE-------------------------------------------------------------------------------------------------------------
+
+-- CREATE TEMPORARY TABLE REQ(classid INTEGER,
+--     reqid INTEGER ,
+--     prereq BOOLEAN,
+--     PRIMARY KEY (classid, reqid));
+
+-- COPY REQ
+-- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/requisites.csv'
+-- DELIMITER ','
+-- CSV HEADER;
+
+
+-- INSERT INTO requisite(CLASSID, REQID, PREREQ)
+-- SELECT DISTINCT REQ.CLASSID,REQ.REQID,REQ.PREREQ
+-- FROM REQ
+-- INNER JOIN CLASS
+-- ON REQ.CLASSID = CLASS.cid
+-- WHERE REQ.PREREQ IS NOT NULL AND REQ.reqid IN (SELECT cid FROM CLASS) AND REQ.REQID > 1 AND REQ.CLASSID > 1;
+
+
+-- DROP TABLE REQ;
+----------------------------------------------------------------------------------------------------------------------
+
+-------UPLOADING AND FILTERING THE DATA FOR THE TABLE SECTION-------------------------------------------------------------------------------------------------------------
+
+
+-- CREATE TEMPORARY TABLE  SEC(sid INT,roomid int ,
+--                      cid int ,mid int ,
+--                     semester varchar(100),years varchar(100),capacity int);
+-- COPY SEC
+-- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/sections.csv'
+-- DELIMITER ','
+-- CSV HEADER;
+
+
+-- INSERT INTO SECTION (sid, roomid, cid, mid, semester, years, capacity)
+-- SELECT SEC.sid, SEC.roomid, SEC.cid, SEC.mid, SEC.semester, SEC.years, SEC.capacity
+-- FROM SEC
+-- INNER JOIN meeting ON meeting.MID = SEC.MID
+-- INNER JOIN CLASS ON SEC.CID = CLASS.cid
+-- INNER JOIN ROOM ON ROOM.RID = SEC.Roomid;
+
+
+-- drop table sec;
+----------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------QUERIES FOR CLEANING DATA PHASE I-------------------------------------------------
+
+
+---------------------------------------------------------ALL THE CLASSES DATA STARTS WITH ID GREATER OR EQUAL TO  2------------------------------------
+
+-- select * from requisite
+-- where classid < 2 or reqid < 2;
+
+-- select * from class
+-- where cid < 2;
+
+
+-- SELECT * FROM section
+-- WHERE CID < 2;
+--------------------------------------------------------------------------------------------------------------------------------
+-- THERE CANNOT BE TWO SECTION.SID WITH THE SAME SID
+
+-- select sid from section
+-- group by sid
+-- having count(*) > 1;
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------NO CLASS BETWEEN 10:15:00 AND 11:59:00 , ALSO NO CLASS AFTER 19:45 (MJ) ---------------------------------------
+
+-- UPDATE meeting --ADD 30 MORE MINUTES TO EVERY STARTTIME AND ENDTIME AFTER 13:45:00
+-- SET STARTTIME = STARTTIME + INTERVAL '00:30:00', --NOW THE MOST EARLY TIME AFTER '13:45:00' IS '02:00:00'
+-- ENDTIME = ENDTIME + INTERVAL '00:30:00'
+-- WHERE starttime BETWEEN '13:00:00' AND '19:45:00' AND CDAYS = 'MJ';
+
+
+-- UPDATE meeting -- CHANGE SCHEDULE FROM STARTTIME = 12:00:00 AND ENDTIME = 13:15:00 TO STARTTIME 12:30:00 AND ENDTIME 13:45:00
+-- SET starttime = '12:30:00', ENDTIME = '13:45:00'
+-- WHERE starttime BETWEEN '12:00:00' AND '12:50:00' AND CDAYS = 'MJ';
+
+
+-- DELETE FROM SECTION WHERE SECTION.MID IN (SELECT MID FROM meeting --DELETE MEETINGS WHERE TIME  IS BETWEEN 10:15 AM TO 11:59 AM MJ
+-- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (ENDTIME > '19:45:00'));
+
+-- DELETE FROM MEETING --DELETE MEETINGS WHERE TIME  IS GREATER THAN 19:45 MJ
+-- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (starttime > '19:45:00');
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------COURSES MUST BE TAUGH IN THE CORRECT YEAR AND SEMESTER---------------------------------
+
+-- DELETE FROM SECTION --EVALUATING CORRECT SEMESTER AND TERM OF FALL
+-- WHERE SECTION.SID IN (SELECT SID FROM SECTION
+-- INNER JOIN CLASS
+-- on class.cid = section.cid
+-- WHERE (semester = 'Fall' AND (term <> 'First Semester' AND term <> 'First Semester, Second Semester' AND TERM <> 'According to Demand')));
+
+
+-- DELETE FROM SECTION --EVALUATING CORRECT SEMESTER AND TERM OF SPRING
+-- WHERE SID IN (SELECT SID FROM SECTION
+-- INNER JOIN CLASS
+-- on class.cid = section.cid
+-- WHERE (SEMESTER = 'Spring' AND (TERM <> 'Second Semester' AND TERM <> 'First Semester, Second Semester' AND TERM <> 'According to Demand')));
+
+-- DELETE FROM section
+-- WHERE SID IN (SELECT SECTION.SID FROM section --EVALUATING EVEN YEARS
+-- INNER JOIN CLASS
+-- ON CLASS.CID = SECTION.cid
+-- WHERE CLASS.YEARS = 'Even Years' AND SECTION.years::INTEGER % 2 <> 0);
+
+-- DELETE FROM section
+-- WHERE SID IN (SELECT section.SID FROM section --EVALUATING EVEN YEARS
+-- INNER JOIN CLASS
+-- ON CLASS.CID = SECTION.cid
+-- WHERE CLASS.YEARS = 'Odd Years' AND SECTION.years::INTEGER % 2 = 0);
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------TWO SECTIONS CANNOT BET AT THE SAME TIME IN THE SAME CLASSROOM-------------------------------------------------------
+
+
+-- CREATE TEMP TABLE CLASS_HOURS(ROOMID INT ,SID INT ,SEMESTER VARCHAR(100),YEARS VARCHAR(100),STARTTIME TIME,ENDTIME TIME,
+--                             CDAYS VARCHAR(5),TERM VARCHAR(100));
+
+-- INSERT INTO CLASS_HOURS(ROOMID,SID,SEMESTER,YEARS,STARTTIME,ENDTIME,CDAYS,TERM)
+-- SELECT SECTION.ROOMID,SECTION.SID,SECTION.SEMESTER,SECTION.YEARS,MEETING.STARTTIME,MEETING.ENDTIME,MEETING.CDAYS,CLASS.TERM FROM SECTION
+-- INNER JOIN MEETING
+-- ON MEETING.MID = SECTION.MID
+-- INNER JOIN CLASS
+-- ON CLASS.CID = SECTION.CID;
+
+
+
+-- SELECT  ROOMID,SEMESTER,YEARS,STARTTIME,ENDTIME,CDAYS,SID FROM CLASS_HOURS -- GRAB DATA WITH THE SAME COLUMNS AND SEMESTER(FIRST SEMESTER)
+-- WHERE TERM = 'First Semester' OR TERM = 'First Semester, Second Semester'
+-- GROUP BY ROOMID,SEMESTER,YEARS,STARTTIME,ENDTIME,CDAYS,SID
+-- order by starttime,years,semester;
+
+
+
+
+
+
+-- DROP TABLE CLASS_HOURS;
+
+-------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------ERASE SECTION WITH GREATER CAPACITY THAN ROOM_CAPACITY---------------------------------------
+
+-- DELETE FROM section
+-- WHERE SID IN (SELECT SID FROM section
+-- INNER JOIN room
+-- ON ROOM.RID = SECTION.roomid
+-- WHERE section.capacity > ROOM.capacity);
+
+
+
+
+
+
+
+
+
+
+
+
