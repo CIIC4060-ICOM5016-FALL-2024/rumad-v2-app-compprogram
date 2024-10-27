@@ -17,20 +17,20 @@ CORS(app)
 #----------GET ALL DATA FOR CLASS
 @app.route("/compprogram/class",methods=["GET"])
 def GetAllData():
-    test = ClassDAO()
+    classObj = ClassDAO()
     list = []
-    data = test.getAllData()
+    data = classObj.getAllData()
     for row in data:
-        list.append(test.Make_Dictionary(row))
+        list.append(classObj.Make_Dictionary(row))
     return jsonify(list)
 
-#-------GET ALL DATA FOR CLASS WITH CID
+#-------GET ALL DATA FOR A CLASS BY CID
 
-@app.route("/compprogram/class/<int:cid>",methods=["GET","POST"])
+@app.route("/compprogram/class/<int:cid>",methods=["GET"])
 def GetClassByCID(cid):
-    test = ClassDAO()
-    data = test.GetClassByCID(cid)
-    result = test.Make_Dictionary(data)
+    classObj = ClassDAO()
+    data = classObj.GetClassByCID(cid)
+    result = classObj.Make_Dictionary(data)
     return jsonify(result)
 
 #----------------TABLE CLASS------------------------------------------------------------------------------------
