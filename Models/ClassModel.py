@@ -21,6 +21,19 @@ class ClassDAO:
         return result
 
 
+    def InsertClass(self,data):
+
+        try:
+            query = "INSERT INTO CLASS(cname,ccode,cdesc,term,years,cred,csyllabus) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+            self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],))
+            self.connection.commit()
+            return {"message": "Class inserted successfully"}, 201
+        except Exception as e:
+            print(f"Insertion error: {e}")
+            return {"error": str(e)}, 401 
+
+
+
         
     def Make_Dictionary(self,data): #data is a list of tuples
         result = {}

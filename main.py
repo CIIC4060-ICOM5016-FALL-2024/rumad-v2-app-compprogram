@@ -1,6 +1,6 @@
 #--------------------#IMPORTS#--------------------#
 
-from flask import Flask,render_template,jsonify
+from flask import Flask,render_template,jsonify,request
 from Models.ClassModel import ClassDAO
 from Controllers.ClassController import ClassController
 
@@ -13,25 +13,34 @@ CORS(app)
 
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
+@app.route("/compprogram/class",methods=["GET","POST"])
 
-#----------GET ALL DATA FOR CLASS
-@app.route("/compprogram/class",methods=["GET"])
+def HandlerCLass():
+    if request.method == "GET":
+        return GetAllData()
+    elif request.method == "POST":
+        return InsertClass()
+#----------GET ALL DATA FOR CLASS------------------
 def GetAllData():
-    classObj = ClassDAO()
-    list = []
-    data = classObj.getAllData()
-    for row in data:
-        list.append(classObj.Make_Dictionary(row))
-    return jsonify(list)
+    Controller = ClassController()
+    return jsonify(Controller.GetAllClass())
+#-------INSERT NEW CLASS---------------------------
+def InsertClass():
+    Controller = ClassController()
+    data = request.get_json()
+    return Controller.InsertClass(data)
 
-#-------GET ALL DATA FOR A CLASS BY CID
+
+#-------GET ALL DATA FOR A CLASS BY CID------------
 
 @app.route("/compprogram/class/<int:cid>",methods=["GET"])
 def GetClassByCID(cid):
-    classObj = ClassDAO()
-    data = classObj.GetClassByCID(cid)
-    result = classObj.Make_Dictionary(data)
-    return jsonify(result)
+    Controller = ClassController()
+    request.get_data()
+    return jsonify(Controller.GetClassByCID(cid))
+
+
+
 
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
