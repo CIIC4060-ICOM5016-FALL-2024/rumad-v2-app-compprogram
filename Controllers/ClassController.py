@@ -20,5 +20,6 @@ class ClassController:
     def InsertClass(self,data):
         return self.Courses.InsertClass(data)
 
-
+    def UpdateClass(self,data):
+        return self.Courses.UpdateClass(data)
 

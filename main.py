@@ -13,13 +13,15 @@ CORS(app)
 
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
-@app.route("/compprogram/class",methods=["GET","POST"])
+@app.route("/compprogram/class",methods=["GET","POST","PUT"])
 
 def HandlerCLass():
     if request.method == "GET":
         return GetAllData()
     elif request.method == "POST":
         return InsertClass()
+    elif request.method == "PUT":
+        return UpdateClass()
 #----------GET ALL DATA FOR CLASS------------------
 def GetAllData():
     Controller = ClassController()
@@ -29,6 +31,13 @@ def InsertClass():
     Controller = ClassController()
     data = request.get_json()
     return Controller.InsertClass(data)
+
+#-------UPDATE AN EXISTENT CLASS---------------------------
+
+def UpdateClass():
+    Controller = ClassController()
+    data = request.get_json()
+    return Controller.UpdateClass(data)
 
 
 #-------GET ALL DATA FOR A CLASS BY CID------------

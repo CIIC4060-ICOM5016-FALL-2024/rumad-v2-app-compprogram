@@ -33,6 +33,16 @@ class ClassDAO:
             return {"error": str(e)}, 401 
 
 
+    def UpdateClass(self,data):
+        try:
+            query = "UPDATE CLASS SET cname = %s ,ccode = %s ,cdesc = %s ,term = %s ,years = %s ,cred = %s ,csyllabus = %s"
+            self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],))
+            self.connection.commit()
+            return {"message": "Class updated successfully"},200
+        except Exception as e:
+            print(f"Update error: {e}")
+            return {"error": str(e)}, 400
+
 
         
     def Make_Dictionary(self,data): #data is a list of tuples
