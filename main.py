@@ -43,6 +43,13 @@ def UpdateClass():
 #-------GET ALL DATA FOR A CLASS BY CID------------
 
 @app.route("/compprogram/class/<int:cid>",methods=["GET"])
+
+# def HandlerClass(cid):
+#     if request.method == "GET":
+#         GetClassByCID(cid)
+#     elif request.method == "DELETE":
+#         DeleteCLassByCID(cid)
+        
 def GetClassByCID(cid):
     Controller = ClassController()
     request.get_data()
@@ -50,6 +57,11 @@ def GetClassByCID(cid):
 
 
 
+@app.route("/compprogram/class/<int:cid>",methods=["DELETE"])
+
+def DeleteCLassByCID(cid):
+    Controller = ClassController()
+    return Controller.DeleteClassByCID(cid)
 
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 

@@ -23,3 +23,6 @@ class ClassController:
     def UpdateClass(self,data):
         return self.Courses.UpdateClass(data)
 
+    def DeleteClassByCID(self,cid):
+        return self.Courses.DeleteClassByCID(cid)
+        

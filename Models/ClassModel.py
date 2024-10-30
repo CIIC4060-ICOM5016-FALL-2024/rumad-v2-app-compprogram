@@ -38,12 +38,24 @@ class ClassDAO:
             query = "UPDATE CLASS SET cname = %s ,ccode = %s ,cdesc = %s ,term = %s ,years = %s ,cred = %s ,csyllabus = %s"
             self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],))
             self.connection.commit()
-            return {"message": "Class updated successfully"},200
+            return {"message": "Class updated successfully"},400
         except Exception as e:
             print(f"Update error: {e}")
+            return {"error": str(e)}, 200
+
+
+    def DeleteClassByCID(self,cid):
+        try:
+            query = "DELETE FROM CLASS WHERE cid = %s;"
+            self.cursor.execute(query,(cid,))
+            self.connection.commit()
+            return {"message":"CLass has been deleted"},200
+        except Exception as e:
+            print(f"Delete error: {e}")
             return {"error": str(e)}, 400
-
-
+    
+    
+    
         
     def Make_Dictionary(self,data): #data is a list of tuples
         result = {}
