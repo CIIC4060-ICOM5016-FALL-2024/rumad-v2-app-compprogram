@@ -52,7 +52,6 @@ def UpdateClass():
         
 def GetClassByCID(cid):
     Controller = ClassController()
-    request.get_data()
     return jsonify(Controller.GetClassByCID(cid))
 
 

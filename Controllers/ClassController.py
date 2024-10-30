@@ -14,8 +14,7 @@ class ClassController:
     
     def GetClassByCID(self,cid):
         data = self.Courses.GetClassByCID(cid)
-        result = self.Courses.Make_Dictionary(data)
-        return result
+        return data
     
     def InsertClass(self,data):
         return self.Courses.InsertClass(data)
