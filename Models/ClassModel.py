@@ -54,6 +54,7 @@ class ClassDAO:
         try:
             query = "DELETE FROM CLASS WHERE cid = %s;"
             self.cursor.execute(query,(cid,))
+            result = self.cursor.fetchone()
             self.connection.commit()
             return {"message":"CLass has been deleted"},200
         except Exception as e:
