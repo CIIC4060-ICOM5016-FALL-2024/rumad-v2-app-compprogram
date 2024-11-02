@@ -10,8 +10,15 @@ from config import *
 app = Flask(__name__)
 CORS(app)
 
-
+#----------------WELCOME-------------------------------------------------------------------------------------------------
+@app.route("/")
+def home():
+    return "Welcome"
 #----------------TABLE CLASS------------------------------------------------------------------------------------
+
+
+
+
 
 @app.route("/compprogram/class",methods=["GET","POST","PUT"])
 
