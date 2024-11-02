@@ -1,4 +1,6 @@
-flask
-requests
-numpy
+Flask
+Flask-CORS
 gunicorn
+numpy
+psycopg2
+requests
