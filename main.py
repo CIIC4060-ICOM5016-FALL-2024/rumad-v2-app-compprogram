@@ -3,12 +3,14 @@
 from flask import Flask,render_template,jsonify,request
 #------------MODELS----------------------------------------------------
 from Models.ClassModel import ClassDAO
-from Controllers.SectionController import SectionDAO
+from Models.SectionModel import SectionDAO
+from Models.MeetingModel import MeetingDAO
 #----------------------------------------------------------------
 #------------CONTROLLERS----------------------------------------------------
 
 from Controllers.ClassController import ClassController
 from Controllers.SectionController import SectionController
+from Controllers.MeetingController import MeetingController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -119,6 +121,61 @@ def DeleteSectionBySID(sid):
     return Controller.DeleteSectionBySID(sid)
 
 #----------------TABLE SECTION------------------------------------------------------------------------------------
+
+
+
+#----------------TABLE MEETING------------------------------------------------------------------------------------
+
+
+
+@app.route("/compprogram/meeting",methods=["GET","POST","PUT"])
+
+def HandlerMeeting():
+    if request.method == "GET":
+        return GetAllMeetings()
+    elif request.method == "POST":
+        return InsertMeeting()
+    elif request.method == "PUT":
+        return UpdateMeeting()
+#----------GET ALL DATA FOR MEETINGS------------------
+def GetAllMeetings():
+    Controller = MeetingController()
+    return jsonify(Controller.GetAllMeetings())
+#-------INSERT NEW MEETINGS---------------------------
+def InsertMeeting():
+    Controller = MeetingController()
+    data = request.get_json()
+    return Controller.InsertMeeting(data)
+
+#-------UPDATE AN EXISTENT MEETING---------------------------
+
+def UpdateMeeting():
+    Controller = MeetingController()
+    data = request.get_json()
+    return Controller.UpdateMeeting(data)
+
+
+#-------GET ALL DATA FOR A SECTION BY MID------------
+
+@app.route("/compprogram/meeting/<mid>",methods=["GET"])
+        
+def GetMeetingByMID(mid):
+    Controller = MeetingController()
+    return jsonify(Controller.GetMeetingByMID(mid))
+
+#-------DELETE CLSASS BY CID------------------------
+
+
+@app.route("/compprogram/meeting/<mid>",methods=["DELETE"])
+
+def DeleteMeetingByMID(mid):
+    Controller = MeetingController()
+    return Controller.DeleteMeetingByMID(mid)
+
+
+
+#----------------TABLE MEETING------------------------------------------------------------------------------------
+
 
 
 #--------------------#RUN_SERVER#--------------------#
