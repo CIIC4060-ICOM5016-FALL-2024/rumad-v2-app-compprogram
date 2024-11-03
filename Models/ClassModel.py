@@ -15,51 +15,42 @@ class ClassDAO:
     
 
     def GetClassByCID(self,cid):#CID
-        try:
-            query = "SELECT cid,cname,ccode,cdesc,term,years,cred,csyllabus FROM CLASS WHERE cid = %s;"
-            self.cursor.execute(query,(cid,))
-            result = self.cursor.fetchone()
-            if result is None:
-                print(f"No record found for CID: {cid}")  # Debug: Log missing record
-                return {"error": f"No class found with CID {cid}"}, 404
-            return result
-        except Exception as e:
-            return {"error": str(e)},400
+        query = "SELECT cid,cname,ccode,cdesc,term,years,cred,csyllabus FROM CLASS WHERE cid = %s;"
+        self.cursor.execute(query,(cid,))
+        result = self.cursor.fetchone()
+        if result is None:
+            print(f"No record found for CID: {cid}")  # Debug: Log missing record
+            return {"error": f"No class found with CID {cid}"}, 404
+        return result
+
 
 
     def InsertClass(self,data):
+        query = "INSERT INTO CLASS(cname,ccode,cdesc,term,years,cred,csyllabus) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+        self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],))
+        self.connection.commit()
+        return {"message": "Class inserted successfully"}, 201
 
-        try:
-            query = "INSERT INTO CLASS(cname,ccode,cdesc,term,years,cred,csyllabus) VALUES(%s,%s,%s,%s,%s,%s,%s)"
-            self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],))
-            self.connection.commit()
-            return {"message": "Class inserted successfully"}, 201
-        except Exception as e:
-            print(f"Insertion error: {e}")
-            return {"error": str(e)}, 400
 
 
     def UpdateClass(self,data):
-        try:
-            query = "UPDATE CLASS SET cname = %s ,ccode = %s ,cdesc = %s ,term = %s ,years = %s ,cred = %s ,csyllabus = %s WHERE cid = %s"
-            self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],data["cid"],))
-            self.connection.commit()
-            return {"message": "Class updated successfully"},200
-        except Exception as e:
-            print(f"Update error: {e}")
-            return {"error": str(e)}, 400
+        query = "UPDATE CLASS SET cname = %s ,ccode = %s ,cdesc = %s ,term = %s ,years = %s ,cred = %s ,csyllabus = %s WHERE cid = %s"
+        self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],data["cid"],))
+        self.connection.commit()
+        if self.cursor.rowcount > 0:
+            return {"message": "Class updated successfully"}, 200
+        else:
+            return {"message": "Class not found"}, 404  # No class was found to delete
 
 
     def DeleteClassByCID(self,cid):
-        try:
-            query = "DELETE FROM CLASS WHERE cid = %s;"
-            self.cursor.execute(query,(cid,))
-            result = self.cursor.fetchone()
-            self.connection.commit()
-            return {"message":"CLass has been deleted"},200
-        except Exception as e:
-            print(f"Delete error: {e}")
-            return {"error": str(e)}, 400
+        query = "DELETE FROM CLASS WHERE cid = %s;"
+        self.cursor.execute(query,(cid,))
+        self.connection.commit()
+        if self.cursor.rowcount > 0:
+            return {"message": "Class has been deleted"}, 200
+        else:
+            return {"message": "Class not found"}, 404  # No class was found to delete
     
     
     

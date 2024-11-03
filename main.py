@@ -13,7 +13,7 @@ CORS(app)
 #----------------WELCOME-------------------------------------------------------------------------------------------------
 @app.route("/")
 def home():
-    return "Welcome"
+    return "Welcome to the New Putty"
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
 
@@ -49,21 +49,16 @@ def UpdateClass():
 
 #-------GET ALL DATA FOR A CLASS BY CID------------
 
-@app.route("/compprogram/class/<int:cid>",methods=["GET"])
-
-# def HandlerClass(cid):
-#     if request.method == "GET":
-#         GetClassByCID(cid)
-#     elif request.method == "DELETE":
-#         DeleteCLassByCID(cid)
+@app.route("/compprogram/class/<cid>",methods=["GET"])
         
 def GetClassByCID(cid):
     Controller = ClassController()
     return jsonify(Controller.GetClassByCID(cid))
 
+#-------DELETE CLASS BY CID------------------------
 
 
-@app.route("/compprogram/class/<int:cid>",methods=["DELETE"])
+@app.route("/compprogram/class/<cid>",methods=["DELETE"])
 
 def DeleteCLassByCID(cid):
     Controller = ClassController()
