@@ -1,8 +1,15 @@
 #--------------------#IMPORTS#--------------------#
 
 from flask import Flask,render_template,jsonify,request
+#------------MODELS----------------------------------------------------
 from Models.ClassModel import ClassDAO
+from Controllers.SectionController import SectionDAO
+#----------------------------------------------------------------
+#------------CONTROLLERS----------------------------------------------------
+
 from Controllers.ClassController import ClassController
+from Controllers.SectionController import SectionController
+#----------------------------------------------------------------
 
 from flask_cors import CORS
 from config import *
@@ -16,23 +23,19 @@ def home():
     return "Welcome to the New Putty"
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
-
-
-
-
 @app.route("/compprogram/class",methods=["GET","POST","PUT"])
 
 def HandlerCLass():
     if request.method == "GET":
-        return GetAllData()
+        return GetAllClasses()
     elif request.method == "POST":
         return InsertClass()
     elif request.method == "PUT":
         return UpdateClass()
 #----------GET ALL DATA FOR CLASS------------------
-def GetAllData():
+def GetAllClasses():
     Controller = ClassController()
-    return jsonify(Controller.GetAllClass())
+    return jsonify(Controller.GetAllClasses())
 #-------INSERT NEW CLASS---------------------------
 def InsertClass():
     Controller = ClassController()
@@ -69,6 +72,53 @@ def DeleteCLassByCID(cid):
 
 
 
+#----------------TABLE SECTION------------------------------------------------------------------------------------
+
+@app.route("/compprogram/section",methods=["GET","POST","PUT"])
+
+def HandlerSection():
+    if request.method == "GET":
+        return GetAllSections()
+    elif request.method == "POST":
+        return InsertSection()
+    elif request.method == "PUT":
+        return UpdateSection()
+#----------GET ALL DATA FOR SECTIONS------------------
+def GetAllSections():
+    Controller = SectionController()
+    return jsonify(Controller.GetAllSections())
+#-------INSERT NEW SECTIONS---------------------------
+def InsertSection():
+    Controller = SectionController()
+    data = request.get_json()
+    return Controller.InsertSection(data)
+
+#-------UPDATE AN EXISTENT SECTION---------------------------
+
+def UpdateSection():
+    Controller = SectionController()
+    data = request.get_json()
+    return Controller.UpdateSection(data)
+
+
+#-------GET ALL DATA FOR A SECTION BY SID------------
+
+@app.route("/compprogram/section/<sid>",methods=["GET"])
+        
+def GetSectionBySID(sid):
+    Controller = SectionController()
+    return jsonify(Controller.GetSectionBySID(sid))
+
+#-------DELETE CLSASS BY CID------------------------
+
+
+@app.route("/compprogram/section/<sid>",methods=["DELETE"])
+
+def DeleteSectionBySID(sid):
+    Controller = SectionController()
+    return Controller.DeleteSectionBySID(sid)
+
+#----------------TABLE SECTION------------------------------------------------------------------------------------
 
 
 #--------------------#RUN_SERVER#--------------------#

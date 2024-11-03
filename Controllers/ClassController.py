@@ -5,9 +5,9 @@ class ClassController:
     def __init__(self):#data should be a jsonfile from the user
         self.Courses = ClassDAO()
 
-    def GetAllClass(self):
+    def GetAllClasses(self):
         list = []
-        data = self.Courses.getAllData()
+        data = self.Courses.getAllClasses()
         for row in data:
             list.append(self.Courses.Make_Dictionary(row))
         return list
@@ -18,7 +18,7 @@ class ClassController:
             if cid < 2:
                 return {"error": "Class ID must be greater than 1"}, 400
             data = self.Courses.GetClassByCID(cid)
-            return data
+            return self.Courses.Make_Dictionary(data)
         except Exception as e:
             return {"error": f"This is not a valid CID: {cid}"}
     

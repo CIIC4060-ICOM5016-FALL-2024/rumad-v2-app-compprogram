@@ -7,7 +7,7 @@ class ClassDAO:
         self.connection = psycopg2.connect(**db_params)#Connecting to the database;
         self.cursor = self.connection.cursor()
     
-    def getAllData(self):
+    def getAllClasses(self):
         query = "SELECT cid,cname,ccode,cdesc,term,years,cred,csyllabus FROM CLASS;"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
