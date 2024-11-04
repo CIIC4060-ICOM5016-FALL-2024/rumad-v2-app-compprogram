@@ -1,4 +1,3 @@
-
 -------CREATION OF THE DOCKER CONTAINER--------------------------------------------------------------------------------------------------------------------
 -- C:\Users\Estudiante> & docker run --name DB_Class `
 -- >>   -e POSTGRES_PASSWORD=tito123 `
@@ -9,12 +8,10 @@
 -- >>   -d `
 -- >>   postgres
 
----------------------------------------------------------------------------------------------------------------------------
-
-
 -- CREATE EXTENSION IF NOT EXISTS vector; --CREATING THE VECTOR DATATYPE
 
 ----CREATION OF THE TABLES-----------------------------------------------------------------------------------------------------------------------
+
 
 -- CREATE TABLE  CLASS(cid serial PRIMARY KEY ,cname varchar(100),ccode varchar(100),cdesc TEXT,
 -- term varchar(100),years varchar(100),cred int, csyllabus TEXT);
@@ -26,7 +23,7 @@
 --     prereq BOOLEAN,
 --     PRIMARY KEY (classid, reqid)
 -- );
--- CREATE TABLE SYLLABUS(chunkid serial Primary Key,courseid int references CLASS(cid),embedding_text vector,chunk varchar(100));
+
 -- CREATE TABLE SECTION(sid serial Primary key,roomid int references Room(rid),
 --                      cid int references Class(cid),mid int references MEETING(mid),
 --                     semester varchar(100),years varchar(100),capacity int);
@@ -35,17 +32,17 @@
 -------UPLOADING THE DATA INTO THE TABLES CALLED MEETING, CLASS AND ROOM--------------------------------------------------------------------------------------------------------------------
 
 -- COPY meeting
--- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/meeting.csv'
+-- FROM '/var/lib/postgresql/data/project_data/meeting.csv'
 -- DELIMITER ','
 -- CSV HEADER;
 
 -- COPY class (cid,cname,ccode,cdesc,term,years,cred,csyllabus)
--- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/courses.csv'
+-- FROM '/var/lib/postgresql/data/project_data/courses.csv'
 -- DELIMITER ','
 -- CSV HEADER;
 
 -- COPY room(rid,building, room_number, capacity)
--- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/rooms.csv'
+-- FROM '/var/lib/postgresql/data/project_data/rooms.csv'
 -- DELIMITER ','
 -- CSV HEADER;
 ---------------------------------------------------------------------------------------------------------------------------
@@ -58,7 +55,7 @@
 --     PRIMARY KEY (classid, reqid));
 
 -- COPY REQ
--- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/requisites.csv'
+-- FROM '/var/lib/postgresql/data/project_data/requisites.csv'
 -- DELIMITER ','
 -- CSV HEADER;
 
@@ -76,12 +73,11 @@
 
 -------UPLOADING AND FILTERING THE DATA FOR THE TABLE SECTION-------------------------------------------------------------------------------------------------------------
 
-
--- CREATE TEMPORARY TABLE  SEC(sid INT,roomid int ,
+-- CREATE TEMPORARY TABLE  SEC(sid INT,roomid int,
 --                      cid int ,mid int ,
 --                     semester varchar(100),years varchar(100),capacity int);
 -- COPY SEC
--- FROM '/var/lib/postgresql/data/rumad2.0_data - Copy/sections.csv'
+-- FROM '/var/lib/postgresql/data/project_data/sections.csv'
 -- DELIMITER ','
 -- CSV HEADER;
 
@@ -134,27 +130,33 @@
 
 
 -- DELETE FROM SECTION WHERE SECTION.MID IN (SELECT MID FROM meeting --DELETE MEETINGS WHERE TIME  IS BETWEEN 10:15 AM TO 11:59 AM MJ
--- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (ENDTIME > '19:45:00'));
+-- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (((starttime > '19:45:00' OR ENDTIME > '19:45:00') AND CDAYS = 'MJ'))); 
+
+-- ----starttime added on the second or clause along the specification of it being on the 'MJ' days
 
 -- DELETE FROM MEETING --DELETE MEETINGS WHERE TIME  IS GREATER THAN 19:45 MJ
--- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (starttime > '19:45:00');
+-- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (((starttime > '19:45:00' OR ENDTIME > '19:45:00') AND CDAYS = 'MJ'));
+
+-- ----starttime added on the second or clause along the specification of it being on the 'MJ' days
+
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------COURSES MUST BE TAUGH IN THE CORRECT YEAR AND SEMESTER---------------------------------
 
+
 -- DELETE FROM SECTION --EVALUATING CORRECT SEMESTER AND TERM OF FALL
 -- WHERE SECTION.SID IN (SELECT SID FROM SECTION
 -- INNER JOIN CLASS
 -- on class.cid = section.cid
--- WHERE (semester = 'Fall' AND (term <> 'First Semester' AND term <> 'First Semester, Second Semester' AND TERM <> 'According to Demand')));
+-- WHERE (semester = 'Fall' AND term = 'Second Semester'));
 
 
 -- DELETE FROM SECTION --EVALUATING CORRECT SEMESTER AND TERM OF SPRING
 -- WHERE SID IN (SELECT SID FROM SECTION
 -- INNER JOIN CLASS
 -- on class.cid = section.cid
--- WHERE (SEMESTER = 'Spring' AND (TERM <> 'Second Semester' AND TERM <> 'First Semester, Second Semester' AND TERM <> 'According to Demand')));
+-- WHERE (SEMESTER = 'Spring' AND term = 'First Semester'));
 
 -- DELETE FROM section
 -- WHERE SID IN (SELECT SECTION.SID FROM section --EVALUATING EVEN YEARS
@@ -171,33 +173,9 @@
 
 ------------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------TWO SECTIONS CANNOT BET AT THE SAME TIME IN THE SAME CLASSROOM-------------------------------------------------------
+--TO THE SHADOW REALM
 
 
--- CREATE TEMP TABLE CLASS_HOURS(ROOMID INT ,SID INT ,SEMESTER VARCHAR(100),YEARS VARCHAR(100),STARTTIME TIME,ENDTIME TIME,
---                             CDAYS VARCHAR(5),TERM VARCHAR(100));
-
--- INSERT INTO CLASS_HOURS(ROOMID,SID,SEMESTER,YEARS,STARTTIME,ENDTIME,CDAYS,TERM)
--- SELECT SECTION.ROOMID,SECTION.SID,SECTION.SEMESTER,SECTION.YEARS,MEETING.STARTTIME,MEETING.ENDTIME,MEETING.CDAYS,CLASS.TERM FROM SECTION
--- INNER JOIN MEETING
--- ON MEETING.MID = SECTION.MID
--- INNER JOIN CLASS
--- ON CLASS.CID = SECTION.CID;
-
-
-
--- SELECT  ROOMID,SEMESTER,YEARS,STARTTIME,ENDTIME,CDAYS,SID FROM CLASS_HOURS -- GRAB DATA WITH THE SAME COLUMNS AND SEMESTER(FIRST SEMESTER)
--- WHERE TERM = 'First Semester' OR TERM = 'First Semester, Second Semester'
--- GROUP BY ROOMID,SEMESTER,YEARS,STARTTIME,ENDTIME,CDAYS,SID
--- order by starttime,years,semester;
-
-
-
-
-
-
--- DROP TABLE CLASS_HOURS;
-
--------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------ERASE SECTION WITH GREATER CAPACITY THAN ROOM_CAPACITY---------------------------------------
 
 -- DELETE FROM section
@@ -207,13 +185,82 @@
 -- WHERE section.capacity > ROOM.capacity);
 
 
+/*------------------------------Local Statistics------------------------------------------------------*/
+--------------------------------Top 3 rooms with the most capacity-------------------------------
+-- SELECT room_number, capacity
+-- FROM ROOM
+-- ORDER BY capacity DESC
+-- LIMIT 3;
+
+-- --------------------------------Top 3 sections with the most student-to-capacity ratio.----------------
+
+-- SELECT room_number, (section.capacity::Float)/(room.capacity::Float) * 100  as student_to_capacity_ratio
+-- FROM section
+-- INNER JOIN room
+-- ON room.rid = section.roomid
+-- ORDER BY student_to_capacity_ratio DESC
+-- LIMIT 3;
+
+-- ------------------------------------Top 3 most taught classes per semester.------------------------------------
+
+-- SELECT class.ccode, semester, sum(section.capacity) as students
+-- from class
+-- INNER JOIN section 
+-- on section.cid = class.cid
+-- GROUP BY class.ccode, semester
+-- ORDER BY students DESC 
+-- LIMIT 3;
 
 
+-- /*-----------------------------------Top 3 classes that were taught the most per room.---------------------------*/
+
+-- SELECT class.ccode, room_number, sum(section.capacity) as students
+-- from class
+-- INNER JOIN section 
+-- on section.cid = class.cid
+-- INNER JOIN room
+-- ON section.roomid = room.rid
+-- GROUP BY class.ccode, room_number
+-- ORDER BY students DESC 
+-- LIMIT 3;
 
 
+-- /*------------------------------------Global Statisctics-------------------------------------------------*/
+-- /*------------------------------------Top 5 meetings with the most sections-----------------------------*/
+
+-- SELECT mid, count(*) as meeting_number
+-- FROM section
+-- GROUP BY mid
+-- ORDER BY meeting_number DESC
+-- LIMIT 5 
+
+-- /*---------------------------------------Top 3 classes that appears the most as prerequisite to other classes---------------*/
 
 
+-- SELECT reqid, class.cdesc, count(*) AS class_count
+-- FROM requisite
+-- INNER JOIN class
+-- ON reqid = class.cid
+-- WHERE cdesc <> 'None'
+-- GROUP BY reqid, class.cdesc
+-- ORDER BY class_count DESC
+-- LIMIT 3;
 
 
+-- /*---------------------------------------Top 3 classes that were offered the least.---------------*/
 
+-- SELECT class.cid, class.cdesc, count(*) as class_count
+-- FROM class
+-- INNER JOIN section
+-- ON section.cid = class.cid
+-- WHERE cdesc <> 'None'
+-- GROUP BY class.cid, class.cdesc
+-- ORDER BY class_count ASC
+-- LIMIT 3
 
+-- /*--------------------------------------Total number of sections per year.----------------------*/  
+
+-- SELECT years, count(*) as sections_per_year
+-- FROM section
+-- GROUP BY years
+-- ORDER BY years
