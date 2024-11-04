@@ -6,6 +6,7 @@ from Models.ClassModel import ClassDAO
 from Models.SectionModel import SectionDAO
 from Models.MeetingModel import MeetingDAO
 from Models.RequisiteModel import RequisiteDAO
+from Models.RoomModel import RoomDAO
 #----------------------------------------------------------------
 #------------CONTROLLERS----------------------------------------------------
 
@@ -13,6 +14,7 @@ from Controllers.ClassController import ClassController
 from Controllers.SectionController import SectionController
 from Controllers.MeetingController import MeetingController
 from Controllers.RequisiteController import RequisiteController
+from Controllers.RoomController import RoomController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -113,7 +115,7 @@ def GetSectionBySID(sid):
     Controller = SectionController()
     return jsonify(Controller.GetSectionBySID(sid))
 
-#-------DELETE CLSASS BY CID------------------------
+#-------DELETE SECTION BY SID------------------------
 
 
 @app.route("/compprogram/section/<sid>",methods=["DELETE"])
@@ -157,7 +159,7 @@ def UpdateMeeting():
     return Controller.UpdateMeeting(data)
 
 
-#-------GET ALL DATA FOR A SECTION BY MID------------
+#-------GET ALL DATA FOR A MEETING BY MID------------
 
 @app.route("/compprogram/meeting/<mid>",methods=["GET"])
         
@@ -165,7 +167,7 @@ def GetMeetingByMID(mid):
     Controller = MeetingController()
     return jsonify(Controller.GetMeetingByMID(mid))
 
-#-------DELETE CLSASS BY CID------------------------
+#-------DELETE MEETING BY MID------------------------
 
 
 @app.route("/compprogram/meeting/<mid>",methods=["DELETE"])
@@ -228,6 +230,63 @@ def DeleteRequisiteByPrimaryKey(classid,reqid):
 
 #----------------TABLE REQUISITE------------------------------------------------------------------------------------
 
+#----------------TABLE ROOM------------------------------------------------------------------------------------
+
+
+
+@app.route("/compprogram/room",methods=["GET","POST","PUT"])
+
+def HandlerRoom():
+    if request.method == "GET":
+        return GetAllRooms()
+    elif request.method == "POST":
+        return InsertRoom()
+    elif request.method == "PUT":
+        return UpdateRoom()
+#----------GET ALL DATA FOR ROOMS------------------
+def GetAllRooms():
+    Controller = RoomController()
+    return jsonify(Controller.GetAllRooms())
+#-------INSERT NEW ROOMS---------------------------
+def InsertRoom():
+    Controller = RoomController()
+    data = request.get_json()
+    return Controller.InsertRoom(data)
+
+#-------UPDATE AN EXISTENT ROOM---------------------------
+
+def UpdateRoom  ():
+    Controller = RoomController()
+    data = request.get_json()
+    return Controller.UpdateRoom(data)
+
+
+#-------GET ALL DATA FOR A ROOM BY RID------------
+
+@app.route("/compprogram/room/<rid>",methods=["GET"])
+        
+def GetRoomByRID(rid):
+    Controller = RoomController()
+    return jsonify(Controller.GetRoomByRID(rid))
+
+#-------DELETE ROOM BY RID------------------------
+
+
+@app.route("/compprogram/room/<rid>",methods=["DELETE"])
+
+def DeleteRoomByRID(rid):
+    Controller = RoomController()
+    return Controller.DeleteRoomByRID(rid)
+
+
+#----------------TABLE ROOM------------------------------------------------------------------------------------
+
+
+#----------------TABLE SYLLABUS------------------------------------------------------------------------------------
+
+
+
+#----------------TABLE SYLLABUS------------------------------------------------------------------------------------
 
 
 #--------------------#RUN_SERVER#--------------------#

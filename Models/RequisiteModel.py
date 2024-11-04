@@ -7,7 +7,7 @@ class RequisiteDAO:
         self.connection = psycopg2.connect(**db_params)#Connecting to the database;
         self.cursor = self.connection.cursor()
     
-    def getAllRequisites(self):
+    def GetAllRequisites(self):
         query = "SELECT classid, reqid, prereq FROM Requisite;"
         self.cursor.execute(query)
         result = self.cursor.fetchall()

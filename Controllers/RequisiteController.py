@@ -7,7 +7,7 @@ class RequisiteController:
 
     def GetAllRequisites(self):
         list = []
-        data = self.Courses.getAllRequisites()
+        data = self.Courses.GetAllRequisites()
         for row in data:
             list.append(self.Courses.Make_Dictionary(row))
         return list
