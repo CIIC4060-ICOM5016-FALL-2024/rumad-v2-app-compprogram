@@ -5,12 +5,14 @@ from flask import Flask,render_template,jsonify,request
 from Models.ClassModel import ClassDAO
 from Models.SectionModel import SectionDAO
 from Models.MeetingModel import MeetingDAO
+from Models.RequisiteModel import RequisiteDAO
 #----------------------------------------------------------------
 #------------CONTROLLERS----------------------------------------------------
 
 from Controllers.ClassController import ClassController
 from Controllers.SectionController import SectionController
 from Controllers.MeetingController import MeetingController
+from Controllers.RequisiteController import RequisiteController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -175,6 +177,56 @@ def DeleteMeetingByMID(mid):
 
 
 #----------------TABLE MEETING------------------------------------------------------------------------------------
+
+
+#----------------TABLE REQUISITE------------------------------------------------------------------------------------
+
+@app.route("/compprogram/requisite",methods=["GET","POST","PUT"])
+
+def HandlerRequisite():
+    if request.method == "GET":
+        return GetAllRequisites()
+    elif request.method == "POST":
+        return InsertRequisite()
+    elif request.method == "PUT":
+        return UpdateRequisite()
+#----------GET ALL DATA FOR REQUISITE------------------
+def GetAllRequisites():
+    Controller = RequisiteController()
+    return jsonify(Controller.GetAllRequisites())
+#-------INSERT NEW REQUISITE---------------------------
+def InsertRequisite():
+    Controller = RequisiteController()
+    data = request.get_json()
+    return Controller.InsertRequisite(data)
+
+#-------UPDATE AN EXISTENT REQUISITE---------------------------
+
+def UpdateRequisite():
+    Controller = RequisiteController()
+    data = request.get_json()
+    return Controller.UpdateRequisite(data)
+
+
+#-------GET ALL DATA FOR A REQUISITE BY PrimaryKey------------
+
+@app.route("/compprogram/requisite/<classid>/<reqid>",methods=["GET"])
+        
+def GetRequisiteByPrimaryKey(classid,reqid):
+    Controller = RequisiteController()
+    return jsonify(Controller.GetRequisiteByPrimaryKey(classid,reqid))
+
+#-------DELETE REQUISITE BY PrimaryKey------------------------
+
+
+@app.route("/compprogram/requisite/<classid>/<reqid>",methods=["DELETE"])
+
+def DeleteRequisiteByPrimaryKey(classid,reqid):
+    Controller = RequisiteController()
+    return Controller.DeleteRequisiteByPrimaryKey(classid,reqid)
+
+
+#----------------TABLE REQUISITE------------------------------------------------------------------------------------
 
 
 
