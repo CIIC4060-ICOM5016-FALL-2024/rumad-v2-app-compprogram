@@ -7,6 +7,7 @@ from Models.SectionModel import SectionDAO
 from Models.MeetingModel import MeetingDAO
 from Models.RequisiteModel import RequisiteDAO
 from Models.RoomModel import RoomDAO
+from Models.SyllabusModel import SyllabusDAO
 #----------------------------------------------------------------
 #------------CONTROLLERS----------------------------------------------------
 
@@ -15,6 +16,7 @@ from Controllers.SectionController import SectionController
 from Controllers.MeetingController import MeetingController
 from Controllers.RequisiteController import RequisiteController
 from Controllers.RoomController import RoomController
+from Controllers.SyllabusController import SyllabusController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -284,6 +286,51 @@ def DeleteRoomByRID(rid):
 
 #----------------TABLE SYLLABUS------------------------------------------------------------------------------------
 
+
+
+@app.route("/compprogram/syllabus",methods=["GET","POST","PUT"])
+
+def HandlerSyllabus():
+    if request.method == "GET":
+        return GetAllSyllabus()
+    elif request.method == "POST":
+        return InsertSyllabus()
+    elif request.method == "PUT":
+        return UpdateSyllabus()
+#----------GET ALL DATA FOR SYLLABUS------------------
+def GetAllSyllabus():
+    Controller = SyllabusController()
+    return jsonify(Controller.GetAllSyllabus())
+#-------INSERT NEW SYLLABUS---------------------------
+def InsertSyllabus():
+    Controller = SyllabusController()
+    data = request.get_json()
+    return Controller.InsertSyllabus(data)
+
+#-------UPDATE AN EXISTENT SYLLABUS---------------------------
+
+def UpdateSyllabus  ():
+    Controller = SyllabusController()
+    data = request.get_json()
+    return Controller.UpdateSyllabus(data)
+
+
+#-------GET ALL DATA FOR A SYLLABUS BY CHUNKID------------
+
+@app.route("/compprogram/syllabus/<chunkid>",methods=["GET"])
+        
+def GetSyllabusByCHUNKID(chunkid):
+    Controller = SyllabusController()
+    return jsonify(Controller.GetSyllabusByCHUNKID(chunkid))
+
+#-------DELETE ROOM BY CHUNKID------------------------
+
+
+@app.route("/compprogram/syllabus/<chunkid>",methods=["DELETE"])
+
+def DeleteSyllabusByCHUNKID(chunkid):
+    Controller = SyllabusController()
+    return Controller.DeleteSyllabusByCHUNKID(chunkid)
 
 
 #----------------TABLE SYLLABUS------------------------------------------------------------------------------------
