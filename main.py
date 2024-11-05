@@ -13,6 +13,7 @@ from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 from Controllers.MostCapacityRatioController import MostCapacityRatioController
 from Controllers.MeetingMostSectionController import MeetingMostSectionController
 from Controllers.MostClassPerRoomController import MostClassPerRoomController
+from Controllers.MostClassPerSemesterYearController import MostClassPerSemesterYearController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -364,7 +365,14 @@ def GET_MEETING_WITH_MOST_SECTION():
 
 #----------------------------------------------------------------------------------------------------------
 
+#--/*------------------------------------Top 3 most taught classes per semester per year-------------------------------------------------*/
 
+@app.route("/compprogram/classes/<years>/<semester>", methods= ["GET"])
+def GET_Most_CLass_Per_Semester_Year(years,semester):
+    controller = MostClassPerSemesterYearController()
+    return jsonify(controller.GET_Most_CLass_Per_Semester_Year(years,semester))
+
+#--/*-------------------------------------------------------------------------------------*/
 
 
 if __name__ == "__main__":
