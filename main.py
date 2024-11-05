@@ -13,7 +13,7 @@ from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 from Controllers.MostCapacityRatioController import MostCapacityRatioController
 from Controllers.MeetingMostSectionController import MeetingMostSectionController
 from Controllers.MostClassPerRoomController import MostClassPerRoomController
-from Controllers.MostPrequisiteController import MostPrequisiteController
+from Controllers.MostPrerequisiteController import MostPrerequisiteController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -369,10 +369,10 @@ def GET_MEETING_WITH_MOST_SECTION():
 
 #----------------------------------Top 3 classes that appears the most as prerequisite to other classes----------------------------------------------------------------------
 
-@app.route("/compprogram/most/prequisite", methods = ["GET"])
+@app.route("/compprogram/most/prerequisite", methods = ["GET"])
 def GET_TOP_PREQUISITE():
-    controller = MostPrequisiteController()
-    return jsonify(controller.GET_TOP_PREQUISITE())
+    controller = MostPrerequisiteController()
+    return jsonify(controller.GET_TOP_PREREQUISITE())
 
 
 

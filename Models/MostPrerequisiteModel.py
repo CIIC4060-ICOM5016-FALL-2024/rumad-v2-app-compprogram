@@ -1,11 +1,11 @@
 from config import *
 
 # Query: Top 3 classes that appears the most as prerequisite to other classes.
-class MostPrequisiteDao:
+class MostPrerequisiteDao:
     def __init__(self):
         self.connection = psycopg2.connect(**db_params)
         self.cursor = self.connection.cursor()
-    def GET_TOP_PREQUISITE(self):
+    def GET_TOP_PREREQUISITE(self):
         query = """SELECT reqid, class.cdesc, count(*) AS class_count
             FROM requisite 
             INNER JOIN class 
