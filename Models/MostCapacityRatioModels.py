@@ -17,6 +17,7 @@ class MostCapacityRatioDAO:
         result = self.cursor.fetchall()
         if len(result) == 0:
             return Exception
+        return result
     
     
     def Make_Dictionary(self,data):

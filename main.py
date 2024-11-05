@@ -351,7 +351,7 @@ def GET_MOST_CAPACITY_RATIO(rid):
     return jsonify(Controller.GET_MOST_CAPACITY_RATIO(rid))
 
 
-#----------------------------------------Top 3 classes that where taught the most per building per room-----------------------------------------------------------------------
+#----------------------------------------Top 3 classes that where taught the most per room-----------------------------------------------------------------------
 @app.route("/compprogram/room/<rid>/classes",methods=["GET"])
 def GET_Most_Class_Per_Room(rid):
     Controller = MostClassPerRoomController()
