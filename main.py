@@ -1,14 +1,6 @@
 #--------------------#IMPORTS#--------------------#
 
 from flask import Flask,render_template,jsonify,request
-#------------MODELS----------------------------------------------------
-from Models.ClassModel import ClassDAO
-from Models.SectionModel import SectionDAO
-from Models.MeetingModel import MeetingDAO
-from Models.RequisiteModel import RequisiteDAO
-from Models.RoomModel import RoomDAO
-from Models.SyllabusModel import SyllabusDAO
-#----------------------------------------------------------------
 #------------CONTROLLERS----------------------------------------------------
 
 from Controllers.ClassController import ClassController
@@ -20,6 +12,7 @@ from Controllers.SyllabusController import SyllabusController
 from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 from Controllers.MostCapacityRatioController import MostCapacityRatioController
 from Controllers.MeetingMostSectionController import MeetingMostSectionController
+from Controllers.MostClassPerRoomController import MostClassPerRoomController
 from Controllers.MostPrequisiteController import MostPrequisiteController
 #----------------------------------------------------------------
 
@@ -358,6 +351,14 @@ def GET_MOST_CAPACITY_RATIO(rid):
 
 
 #----------------------------------------------------------------------------------------------------------
+@app.route("/compprogram/room/<rid>/classes",methods=["GET"])
+def GET_Most_Class_Per_Room(rid):
+    Controller = MostClassPerRoomController()
+    return jsonify(Controller.GET_Most_Class_Per_Room(rid))
+
+#/*------------------------------Global Statistics------------------------------------------------------*/
+
+
 
 #----------------------------------Top 5 meetings with the most sections------------------------------
 
@@ -366,7 +367,7 @@ def GET_MEETING_WITH_MOST_SECTION():
     controller = MeetingMostSectionController()
     return jsonify(controller.GET_MEETING_WITH_MOST_SECTION())
 
-#----------------------------------------------------------------------------------------------------------
+#----------------------------------Top 3 classes that appears the most as prerequisite to other classes----------------------------------------------------------------------
 
 @app.route("/compprogram/most/prequisite", methods = ["GET"])
 def GET_TOP_PREQUISITE():
