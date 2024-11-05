@@ -20,6 +20,7 @@ from Controllers.SyllabusController import SyllabusController
 from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 from Controllers.MostCapacityRatioController import MostCapacityRatioController
 from Controllers.MeetingMostSectionController import MeetingMostSectionController
+from Controllers.MostPrequisiteController import MostPrequisiteController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -360,13 +361,17 @@ def GET_MOST_CAPACITY_RATIO(rid):
 
 #----------------------------------Top 5 meetings with the most sections------------------------------
 
-@app.route("/compprogram/most/meeting", methods= ["GET"])
+@app.route("/compprogram/most/meeting", methods = ["GET"])
 def GET_MEETING_WITH_MOST_SECTION():
     controller = MeetingMostSectionController()
     return jsonify(controller.GET_MEETING_WITH_MOST_SECTION())
 
 #----------------------------------------------------------------------------------------------------------
 
+@app.route("/compprogram/most/prequisite", methods = ["GET"])
+def GET_TOP_PREQUISITE():
+    controller = MostPrequisiteController()
+    return jsonify(controller.GET_TOP_PREQUISITE())
 
 
 
