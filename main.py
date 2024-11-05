@@ -17,6 +17,8 @@ from Controllers.MeetingController import MeetingController
 from Controllers.RequisiteController import RequisiteController
 from Controllers.RoomController import RoomController
 from Controllers.SyllabusController import SyllabusController
+from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
+from Controllers.MostCapacityRatioController import MostCapacityRatioController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -335,8 +337,29 @@ def DeleteSyllabusByCHUNKID(chunkid):
 
 #----------------TABLE SYLLABUS------------------------------------------------------------------------------------
 
+#/*------------------------------Local Statistics------------------------------------------------------*/
+#--------------------------------Top 3 rooms with the most capacity-------------------------------
 
-#--------------------#RUN_SERVER#--------------------#
+@app.route("/compprogram/room/<building>/capacity",methods=["GET"])
+def GET_MOST_CAPACITY_ROOMS(building):
+    Controller = MostCapacityRoomsController()
+    return jsonify(Controller.GET_Most_Capacity_Rooms(building))
+
+
+#----------------------------------------------------------------------------------------------------------
+#----------------------------------Top 3 sections with the most student-to-capacity ratio.----------------
+
+@app.route("/compprogram/room/<rid>/ratio",methods=["GET"])
+def GET_MOST_CAPACITY_RATIO(rid):
+    Controller = MostCapacityRatioController()
+    return jsonify(Controller.GET_MOST_CAPACITY_RATIO(rid))
+
+
+#----------------------------------------------------------------------------------------------------------
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
