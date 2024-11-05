@@ -13,6 +13,7 @@ from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 from Controllers.MostCapacityRatioController import MostCapacityRatioController
 from Controllers.MeetingMostSectionController import MeetingMostSectionController
 from Controllers.MostClassPerRoomController import MostClassPerRoomController
+from Controllers.MostPrerequisiteController import MostPrerequisiteController
 from Controllers.MostClassPerSemesterYearController import MostClassPerSemesterYearController
 #----------------------------------------------------------------
 
@@ -342,7 +343,7 @@ def GET_MOST_CAPACITY_ROOMS(building):
 
 
 #----------------------------------------------------------------------------------------------------------
-#----------------------------------Top 3 sections with the most student-to-capacity ratio.----------------
+#----------------------------------------Top 3 sections with the most student-to-capacity ratio.----------------
 
 @app.route("/compprogram/room/<rid>/ratio",methods=["GET"])
 def GET_MOST_CAPACITY_RATIO(rid):
@@ -350,20 +351,12 @@ def GET_MOST_CAPACITY_RATIO(rid):
     return jsonify(Controller.GET_MOST_CAPACITY_RATIO(rid))
 
 
-#----------------------------------------------------------------------------------------------------------
+#----------------------------------------Top 3 classes that where taught the most per building per room-----------------------------------------------------------------------
 @app.route("/compprogram/room/<rid>/classes",methods=["GET"])
 def GET_Most_Class_Per_Room(rid):
     Controller = MostClassPerRoomController()
     return jsonify(Controller.GET_Most_Class_Per_Room(rid))
 
-#----------------------------------Top 5 meetings with the most sections------------------------------
-
-@app.route("/compprogram/most/meeting", methods= ["GET"])
-def GET_MEETING_WITH_MOST_SECTION():
-    controller = MeetingMostSectionController()
-    return jsonify(controller.GET_MEETING_WITH_MOST_SECTION())
-
-#----------------------------------------------------------------------------------------------------------
 
 #--/*------------------------------------Top 3 most taught classes per semester per year-------------------------------------------------*/
 
@@ -371,6 +364,25 @@ def GET_MEETING_WITH_MOST_SECTION():
 def GET_Most_CLass_Per_Semester_Year(years,semester):
     controller = MostClassPerSemesterYearController()
     return jsonify(controller.GET_Most_CLass_Per_Semester_Year(years,semester))
+
+#/*------------------------------Global Statistics------------------------------------------------------*/
+
+
+
+#----------------------------------Top 5 meetings with the most sections------------------------------
+
+@app.route("/compprogram/most/meeting", methods = ["GET"])
+def GET_MEETING_WITH_MOST_SECTION():
+    controller = MeetingMostSectionController()
+    return jsonify(controller.GET_MEETING_WITH_MOST_SECTION())
+
+#----------------------------------Top 3 classes that appears the most as prerequisite to other classes----------------------------------------------------------------------
+
+@app.route("/compprogram/most/prerequisite", methods = ["GET"])
+def GET_TOP_PREQUISITE():
+    controller = MostPrerequisiteController()
+    return jsonify(controller.GET_TOP_PREREQUISITE())
+
 
 #--/*-------------------------------------------------------------------------------------*/
 
