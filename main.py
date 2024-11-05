@@ -11,6 +11,7 @@ from Controllers.RoomController import RoomController
 from Controllers.SyllabusController import SyllabusController
 from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 from Controllers.MostCapacityRatioController import MostCapacityRatioController
+from Controllers.MeetingMostSectionController import MeetingMostSectionController
 from Controllers.MostClassPerRoomController import MostClassPerRoomController
 #----------------------------------------------------------------
 
@@ -353,6 +354,13 @@ def GET_MOST_CAPACITY_RATIO(rid):
 def GET_Most_Class_Per_Room(rid):
     Controller = MostClassPerRoomController()
     return jsonify(Controller.GET_Most_Class_Per_Room(rid))
+
+#----------------------------------Top 5 meetings with the most sections------------------------------
+
+@app.route("/compprogram/most/meeting", methods= ["GET"])
+def GET_MEETING_WITH_MOST_SECTION():
+    controller = MeetingMostSectionController()
+    return jsonify(controller.GET_MEETING_WITH_MOST_SECTION())
 
 #----------------------------------------------------------------------------------------------------------
 
