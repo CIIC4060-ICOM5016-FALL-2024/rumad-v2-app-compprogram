@@ -1,14 +1,6 @@
 #--------------------#IMPORTS#--------------------#
 
 from flask import Flask,render_template,jsonify,request
-#------------MODELS----------------------------------------------------
-from Models.ClassModel import ClassDAO
-from Models.SectionModel import SectionDAO
-from Models.MeetingModel import MeetingDAO
-from Models.RequisiteModel import RequisiteDAO
-from Models.RoomModel import RoomDAO
-from Models.SyllabusModel import SyllabusDAO
-#----------------------------------------------------------------
 #------------CONTROLLERS----------------------------------------------------
 
 from Controllers.ClassController import ClassController
@@ -19,6 +11,7 @@ from Controllers.RoomController import RoomController
 from Controllers.SyllabusController import SyllabusController
 from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 from Controllers.MostCapacityRatioController import MostCapacityRatioController
+from Controllers.MostClassPerRoomController import MostClassPerRoomController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -356,7 +349,12 @@ def GET_MOST_CAPACITY_RATIO(rid):
 
 
 #----------------------------------------------------------------------------------------------------------
+@app.route("/compprogram/room/<rid>/classes",methods=["GET"])
+def GET_Most_Class_Per_Room(rid):
+    Controller = MostClassPerRoomController()
+    return jsonify(Controller.GET_Most_Class_Per_Room(rid))
 
+#----------------------------------------------------------------------------------------------------------
 
 
 
