@@ -14,6 +14,8 @@ class RequisiteController:
     
     def GetRequisiteByPrimaryKey(self,classid,reqid):
         try:
+            if (data["reqid"] != True and data["reqid"] != False):
+                return {"error":f"The reqid must be True or False and yours is: {data["reqid"]}"}
             classid = int(classid)
             reqid = int(reqid)
             if classid < 0 and reqid < 0:
