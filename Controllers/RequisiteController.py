@@ -19,7 +19,7 @@ class RequisiteController:
             reqid = int(reqid)
             #The class id must be greater than 0 if not throw the Primary key greater than 0 error
             if classid < 0 or reqid < 0:
-                return {"error": "Requisite PrimaryKey must be greater or equal to 0"}, 400
+                return {"error": f"Requisite PrimaryKey must be greater or equal to 0 and your is: ({classid},{reqid})"}, 400
             data = self.Courses.GetRequisiteByPrimaryKey(classid,reqid)
             # Once if found the correct data, can be make into a dictionary to answer the get request
             return self.Courses.Make_Dictionary(data)
