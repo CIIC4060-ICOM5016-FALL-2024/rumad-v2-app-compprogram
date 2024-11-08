@@ -30,7 +30,9 @@ class RoomController:
     
     def InsertRoom(self,data):
         try:
-            if (data["building"] != "Stefani" and data["building"] != "Monzon" and data["building"] != "Software"):
+            # DO NOT ACCEPT BUILDINGS THAT ARE NOT CALLED, Stefani, Monzon OR Software
+            Acceptable_Buildings = ["Stefani","Monzon","Software"]
+            if (data["building"] not in Acceptable_Buildings):
                 return {"error":f"Is not a valid building: {data["building"]}"}
             if(int(data["capacity"]) < 1):
                 return {"error": f"At least 1 person, should be in a room and you have {data["capacity"]}"}
@@ -46,7 +48,8 @@ class RoomController:
 
     def UpdateRoom(self,data):
         try:
-            if (data["building"] != "Stefani" and data["building"] != "Monzon" and data["building"] != "Software"):
+            Acceptable_Buildings = ["Stefani","Monzon","Software"]
+            if (data["building"] not in Acceptable_Buildings):
                 return {"error":f"Is not a valid building: {data["building"]}"},400
             if(int(data["capacity"]) < 1):
                 return {"error": f"At least 1 person, should be in a room and you have {data["capacity"]}"},400
