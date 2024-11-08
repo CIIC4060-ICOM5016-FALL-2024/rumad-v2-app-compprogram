@@ -10,7 +10,7 @@ class MostPrerequisiteDao:
             FROM requisite 
             INNER JOIN class 
             ON reqid = class.cid 
-            WHERE cdesc <> 'None' 
+            WHERE cdesc <> 'None' AND prereq = 'True'
             GROUP BY reqid, class.cdesc 
             ORDER BY class_count DESC 
             LIMIT 3;"""
