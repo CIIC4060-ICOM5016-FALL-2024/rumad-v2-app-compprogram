@@ -19,8 +19,7 @@ class RoomDAO:
         self.cursor.execute(query,(rid,))
         result = self.cursor.fetchone()
         if result is None:
-            print(f"No record found for RID: {rid}")  # Debug: Log missing record
-            return {"error": f"No Room found with RID {rid}"}, 404
+            return Exception
         return result
 
 
