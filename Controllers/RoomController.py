@@ -33,18 +33,18 @@ class RoomController:
             # DO NOT ACCEPT BUILDINGS THAT ARE NOT CALLED, Stefani, Monzon OR Software
             Acceptable_Buildings = ["Stefani","Monzon","Software"]
             if (data["building"] not in Acceptable_Buildings):
-                return {"error":f"Is not a valid building: {data["building"]}"},400
+                return {"error":f"Is not a valid building: {data['building']}"},400
             if(int(data["capacity"]) < 1):
-                return {"error": f"At least 1 person, should be in a room and you have {data["capacity"]}"},400
+                return {"error": f"At least 1 person, should be in a room and you have {data['capacity']}"},400
             if(int(data["room_number"]) < 0):
                 return {"error":"The rooms must be greater or equal to 0"},400
             return self.Courses.InsertRoom(data)
         except Exception as e:
             try:                                          
                 int(data["room_number"])              
-                return {"error": f"The capacity must be an integer and your is: {data["capacity"]}"}, 400
+                return {"error": f"The capacity must be an integer and your is: {data['capacity']}"}, 400
             except:
-                return {"error": f"The room_number must be a number and your is: {data["room_number"]}"}, 400                                    
+                return {"error": f"The room_number must be a number and your is: {data['room_number']}"}, 400                                    
                 
 
     def UpdateRoom(self,data):
@@ -52,9 +52,9 @@ class RoomController:
             # DO NOT ACCEPT BUILDINGS THAT ARE NOT CALLED, Stefani, Monzon OR Software
             Acceptable_Buildings = ["Stefani","Monzon","Software"]
             if (data["building"] not in Acceptable_Buildings):
-                return {"error":f"Is not a valid building: {data["building"]}"},400
+                return {"error":f"Is not a valid building: {data['building']}"},400
             if(int(data["capacity"]) < 1):
-                return {"error": f"At least 1 person, should be in a room and you have {data["capacity"]}"},400
+                return {"error": f"At least 1 person, should be in a room and you have {data['capacity']}"},400
             if(int(data["room_number"]) < 0):
                 return {"error":"The rooms must be greater or equal to 0"},400
             return self.Courses.UpdateRoom(data)
@@ -62,13 +62,13 @@ class RoomController:
             try:                                          
                 int(data["room_number"])              
                 int(data["rid"])              
-                return {"error": f"The capacity must be an integer and your is: {data["capacity"]}"}, 400
+                return {"error": f"The capacity must be an integer and your is: {data['capacity']}"}, 400
             except:
                 try:
                     int(data["rid"])
-                    return {"error": f"The room_number must be a number and your is: {data["room_number"]}"}, 400  
+                    return {"error": f"The room_number must be a number and your is: {data['room_number']}"}, 400  
                 except: 
-                    return {"error":f"The rid must be an interger and your is: {data["rid"]}"}, 400
+                    return {"error":f"The rid must be an interger and your is: {data['rid']}"}, 400
 
     def DeleteRoomByRID(self,rid):
         try:

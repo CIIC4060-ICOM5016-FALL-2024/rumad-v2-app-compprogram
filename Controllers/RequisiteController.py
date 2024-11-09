@@ -36,7 +36,7 @@ class RequisiteController:
         try:
             #The requid must be true or false, other stuff will be considered a bad input
             if (bool(data["prereq"]) != True and bool(data["prereq"]) != False):
-                return {"error":f"The reqid must be True or False and yours is: {data["prereq"]}"}
+                return {"error":f"The reqid must be True or False and yours is: {data['prereq']}"}
             #Verify if the data is an integer, if is not: is consider a bad input
             int(data["reqid"])
             int(data["classid"])
@@ -49,7 +49,7 @@ class RequisiteController:
                 int(data["reqid"])
                 return {"error": str(e)}, 400
             except:
-                return {"error": f"The id's have to be integers and yours are: classid: {data["classid"]} , reqid: {data["reqid"]}"}, 400
+                return {"error": f"The id's have to be integers and yours are: classid: {data['classid']} , reqid: {data['reqid']}"}, 400
 
 
 
@@ -57,7 +57,7 @@ class RequisiteController:
         try:
             #The requid must be true or false, other stuff will be considered a bad input
             if (bool(data["prereq"]) != True and bool(data["prereq"]) != False):
-                return {"error":f"The reqid must be True or False and yours is: {data["prereq"]}"}
+                return {"error":f"The reqid must be True or False and yours is: {data['prereq']}"}
             #Verify if the data is an integer, if is not: is consider a bad input
             int(data["reqid"])
             int(data["classid"])
@@ -70,7 +70,7 @@ class RequisiteController:
                 int(data["reqid"])
                 return {"error": str(e)}, 400
             except:
-                return {"error": f"The id's have to be integers and yours are: classid: {data["classid"]} , reqid: {data["reqid"]}"}, 400
+                return {"error": f"The id's have to be integers and yours are: classid: {data['classid']} , reqid: {data['reqid']}"}, 400
 
     def DeleteRequisiteByPrimaryKey(self,classid,reqid):
         try:
