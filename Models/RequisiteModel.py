@@ -18,8 +18,8 @@ class RequisiteDAO:
         query = "SELECT classid, reqid, prereq FROM Requisite WHERE classid = %s AND reqid = %s;"
         self.cursor.execute(query,(classid,reqid,))
         result = self.cursor.fetchone()
+        print(result)
         if result is None:
-            print(f"No record found for PrimaryKey: ({classid},{reqid})")  # Debug: Log missing record
             return {"error": f"No Requisite found with PrimaryKey ({classid},{reqid})"}, 404
         return result
 

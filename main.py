@@ -15,6 +15,8 @@ from Controllers.MeetingMostSectionController import MeetingMostSectionControlle
 from Controllers.MostClassPerRoomController import MostClassPerRoomController
 from Controllers.MostPrerequisiteController import MostPrerequisiteController
 from Controllers.MostClassPerSemesterYearController import MostClassPerSemesterYearController
+from Controllers.LeastClassTaughtController import LeastClassTaughtController
+from Controllers.SectionsPerYearController import SectionsPerYearController
 #----------------------------------------------------------------
 
 from flask_cors import CORS
@@ -386,6 +388,20 @@ def GET_TOP_PREQUISITE():
 
 #--/*-------------------------------------------------------------------------------------*/
 
+
+#--/*------------------------------Top 3 classes that were offered the least----------------------------------------------------------*/
+
+@app.route("/compprogram/least/classes", methods = ["GET"])
+def GET_LEAST_CLASS():
+    controller = LeastClassTaughtController()
+    return jsonify(controller.GET_LEAST_CLASS())
+
+#--/*------------------------------Total number of sections per year----------------------------------------------------------*/
+
+@app.route("/compprogram/section/year", methods = ["GET"])
+def GET_SECTIONS_PER_YEAR():
+    controller = SectionsPerYearController()
+    return jsonify(controller.GET_SECTIONS_PER_YEAR())
 
 if __name__ == "__main__":
     app.run(debug=True)
