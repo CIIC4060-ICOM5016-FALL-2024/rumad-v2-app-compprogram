@@ -33,9 +33,9 @@ class RequisiteDAO:
 
 
 
-    def UpdateRequisite(self,data):
+    def UpdateRequisite(self,classid,reqid,data):
         query = "UPDATE Requisite SET prereq = %s WHERE classid = %s and reqid = %s;"
-        self.cursor.execute(query,(data["prereq"],data["classid"],data["reqid"],))
+        self.cursor.execute(query,(data["prereq"],classid,reqid,))
         self.connection.commit()
         if self.cursor.rowcount > 0:
             return {"message": "Requisite updated successfully"}, 200

@@ -187,15 +187,13 @@ def DeleteMeetingByMID(mid):
 
 #----------------TABLE REQUISITE------------------------------------------------------------------------------------
 
-@app.route("/compprogram/requisite",methods=["GET","POST","PUT"])
+@app.route("/compprogram/requisite",methods=["GET","POST"])
 
 def HandlerRequisite():
     if request.method == "GET":
         return GetAllRequisites()
     elif request.method == "POST":
         return InsertRequisite()
-    elif request.method == "PUT":
-        return UpdateRequisite()
 #----------GET ALL DATA FOR REQUISITE------------------
 def GetAllRequisites():
     Controller = RequisiteController()
@@ -206,12 +204,6 @@ def InsertRequisite():
     data = request.get_json()
     return Controller.InsertRequisite(data)
 
-#-------UPDATE AN EXISTENT REQUISITE---------------------------
-
-def UpdateRequisite():
-    Controller = RequisiteController()
-    data = request.get_json()
-    return Controller.UpdateRequisite(data)
 
 
 #-------GET ALL DATA FOR A REQUISITE BY PrimaryKey------------
@@ -221,6 +213,16 @@ def UpdateRequisite():
 def GetRequisiteByPrimaryKey(classid,reqid):
     Controller = RequisiteController()
     return jsonify(Controller.GetRequisiteByPrimaryKey(classid,reqid))
+
+#-------UPDATE AN EXISTENT REQUISITE---------------------------
+
+@app.route("/compprogram/requisite/<classid>/<reqid>",methods=["PUT"])
+
+def UpdateRequisite(classid,reqid):
+    Controller = RequisiteController()
+    data = request.get_json()
+    print(classid,reqid)
+    return Controller.UpdateRequisite(classid,reqid,data)
 
 #-------DELETE REQUISITE BY PrimaryKey------------------------
 
