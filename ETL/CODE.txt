@@ -45,6 +45,9 @@
 -- FROM '/var/lib/postgresql/data/project_data/rooms.csv'
 -- DELIMITER ','
 -- CSV HEADER;
+
+-- SELECT cid FROM class
+-- WHERE cid = 26;
 ---------------------------------------------------------------------------------------------------------------------------
 
 -------UPLOADING AND FILTERING THE DATA FOR THE TABLE REQUISITE-------------------------------------------------------------------------------------------------------------
@@ -76,10 +79,15 @@
 -- CREATE TEMPORARY TABLE  SEC(sid INT,roomid int,
 --                      cid int ,mid int ,
 --                     semester varchar(100),years varchar(100),capacity int);
+
+-- -- SECTIONS.CSV cid AND mid COLUMNS NEED TO BE SWAPPED
 -- COPY SEC
 -- FROM '/var/lib/postgresql/data/project_data/sections.csv'
 -- DELIMITER ','
 -- CSV HEADER;
+
+-- SELECT * FROM section
+-- WHERE cid = 26;
 
 
 -- INSERT INTO SECTION (sid, roomid, cid, mid, semester, years, capacity)
@@ -107,14 +115,64 @@
 
 -- SELECT * FROM section
 -- WHERE CID < 2;
---------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
 -- THERE CANNOT BE TWO SECTION.SID WITH THE SAME SID
 
 -- select sid from section
 -- group by sid
 -- having count(*) > 1;
 ------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------TWO SECTIONS CANNOT BE TAUGHT AT THE SAME TIME IN THE SAME CLASSROOM AS LONG AS THEY ARE IN THE SAME SEMESTER AND SAME YEAR------------------------------
 
+--TO THE SHADOW REALM AND BACK AGAIN   
+/*--------------------------------IF A SECTION IS TAUGHT AT THE SAME TIME AND THE SAME CLASSROOM, REMOVE THE ONE WITH THE BIGGER SID------------------------------------------------------------------------------*/
+
+-- WITH left_query AS(
+-- /*Gives me the minimum sid of all of them*/
+-- SELECT MIN(section.sid) as excluded_sid FROM section
+-- INNER JOIN (
+-- /*query for looking at duplicate sections that have the same semester, year, and room.*/
+-- SELECT meeting.mid, section.semester, section.years, room.room_number, count(*) as duplicates FROM meeting
+-- INNER JOIN section
+-- ON meeting.mid = section.mid
+-- INNER JOIN room
+-- ON section.roomid = room.rid
+-- GROUP BY meeting.mid, section.semester, section.years, room.room_number
+-- HAVING COUNT(*) > 1
+-- ORDER BY duplicates DESC
+
+-- ) AS meet
+-- ON section.mid = meet.mid
+-- WHERE section.semester = meet.semester AND section.years = meet.years
+-- GROUP BY meet.mid
+-- HAVING COUNT(*) > 1
+-- ), right_query AS (
+-- SELECT section.sid FROM section
+-- INNER JOIN (
+-- /*QUERY FOR ALL THE SIDs that are duplicates*/
+-- SELECT meeting.mid, section.semester, section.years, room.room_number, count(*) as duplicates FROM meeting
+-- INNER JOIN section
+-- ON meeting.mid = section.mid
+-- INNER JOIN room
+-- ON section.roomid = room.rid
+-- GROUP BY meeting.mid, section.semester, section.years, room.room_number
+-- HAVING COUNT(*) > 1
+-- ORDER BY duplicates DESC
+
+-- ) AS meet
+-- ON section.mid = meet.mid
+-- WHERE section.semester = meet.semester AND section.years = meet.years
+-- )
+
+-- /* B - A, where B are all sections that have duplicate semester, years, meeting, and room, AND A are the minimum sids of those. */
+-- DELETE FROM section
+-- WHERE sid IN (SELECT right_query.sid
+-- FROM right_query 
+-- EXCEPT
+-- SELECT left_query.excluded_sid
+-- FROM left_query);
+
+--------------------------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------NO CLASS BETWEEN 10:15:00 AND 11:59:00 , ALSO NO CLASS AFTER 19:45 (MJ) ---------------------------------------
 
@@ -130,15 +188,14 @@
 
 
 -- DELETE FROM SECTION WHERE SECTION.MID IN (SELECT MID FROM meeting --DELETE MEETINGS WHERE TIME  IS BETWEEN 10:15 AM TO 11:59 AM MJ
--- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (((starttime > '19:45:00' OR ENDTIME > '19:45:00') AND CDAYS = 'MJ'))); 
+-- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (((starttime > '19:00:00' OR ENDTIME > '19:45:00') AND CDAYS = 'MJ'))); 
 
 -- ----starttime added on the second or clause along the specification of it being on the 'MJ' days
 
 -- DELETE FROM MEETING --DELETE MEETINGS WHERE TIME  IS GREATER THAN 19:45 MJ
--- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (((starttime > '19:45:00' OR ENDTIME > '19:45:00') AND CDAYS = 'MJ'));
+-- WHERE (starttime BETWEEN '10:15:00' AND '11:59:00' AND CDAYS = 'MJ') OR (((starttime > '19:00:00' OR ENDTIME > '19:45:00') AND CDAYS = 'MJ'));
 
--- ----starttime added on the second or clause along the specification of it being on the 'MJ' days
-
+-- --starttime added on the second or clause along the specification of it being on the 'MJ' days
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -171,11 +228,6 @@
 -- WHERE CLASS.YEARS = 'Odd Years' AND SECTION.years::INTEGER % 2 = 0);
 
 
-------------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------TWO SECTIONS CANNOT BET AT THE SAME TIME IN THE SAME CLASSROOM-------------------------------------------------------
---TO THE SHADOW REALM
-
-
 ---------------------------------------------------------ERASE SECTION WITH GREATER CAPACITY THAN ROOM_CAPACITY---------------------------------------
 
 -- DELETE FROM section
@@ -184,6 +236,22 @@
 -- ON ROOM.RID = SECTION.roomid
 -- WHERE section.capacity > ROOM.capacity);
 
+
+
+/*-------------------------- TOTAL NUMBER OF ROWS ON ALL TABLES ---------------*/
+-- SELECT SUM(counts) as total_count
+-- FROM(
+--     SELECT COUNT(*) AS counts FROM class
+--     UNION ALL 
+--     SELECT COUNT(*) AS counts FROM meeting
+--     UNION ALL  
+--     SELECT COUNT(*) AS counts FROM requisite
+--     UNION ALL 
+--     SELECT COUNT(*) AS counts FROM room
+--     UNION ALL 
+--     SELECT COUNT(*) AS counts FROM section);
+    
+--------------------------------------------------------------------------------------
 
 /*------------------------------Local Statistics------------------------------------------------------*/
 --------------------------------Top 3 rooms with the most capacity-------------------------------
@@ -264,3 +332,5 @@
 -- FROM section
 -- GROUP BY years
 -- ORDER BY years
+
+-- DROP TABLE class, meeting, requisite, room, section
