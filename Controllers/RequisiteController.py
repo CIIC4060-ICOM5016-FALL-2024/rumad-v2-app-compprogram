@@ -29,14 +29,14 @@ class RequisiteController:
                 # or a varchar instead of a integer
                 int(classid)
                 int(reqid)
-                return {"error": f"This Primary key was not found: ({classid},{reqid})"}
+                return {"error": f"This Primary key was not found: ({classid},{reqid})"}, 400
             except:
-                return {"error": f"This is not a valid PrimaryKey: ({classid},{reqid})"}
+                return {"error": f"This is not a valid PrimaryKey: ({classid},{reqid})"}, 400
     def InsertRequisite(self,data):
         try:
             #The requid must be true or false, other stuff will be considered a bad input
             if (bool(data["prereq"]) != True and bool(data["prereq"]) != False):
-                return {"error":f"The reqid must be True or False and yours is: {data['prereq']}"}
+                return {"error":f"The reqid must be True or False and yours is: {data['prereq']}"}, 400
             #Verify if the data is an integer, if is not: is consider a bad input
             int(data["reqid"])
             int(data["classid"])
@@ -57,7 +57,7 @@ class RequisiteController:
         try:
             #The requid must be true or false, other stuff will be considered a bad input
             if (bool(data["prereq"]) != True and bool(data["prereq"]) != False):
-                return {"error":f"The reqid must be True or False and yours is: {data['prereq']}"}
+                return {"error":f"The reqid must be True or False and yours is: {data['prereq']}"}, 400
             #Verify if the data is an integer, if is not: is consider a bad input
             int(data["reqid"])
             int(data["classid"])
