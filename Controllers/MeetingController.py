@@ -26,16 +26,18 @@ class MeetingController:
             return {"error": f"This is not a valid mid: {mid}"}, 400
     
     def InsertMeeting(self,data):
-        # eliminate the try-except later, it's not doing anything
-        starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
-        endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
-        time_diff_MJ = timedelta(hours=1, minutes=15)
-        time_diff_LWV = timedelta(hours=0, minutes=50)
-        data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
-        data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
-        print(endtime-starttime)
+
          
         try:
+            # eliminate the try-except later, it's not doing anything
+            starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
+            endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
+            time_diff_MJ = timedelta(hours=1, minutes=15)
+            time_diff_LWV = timedelta(hours=0, minutes=50)
+            data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
+            data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
+
+                
             # checks if the days are valid 
             if (data["cdays"] != "LWV") and (data["cdays"] != "MJ"):
                 return {"error": f"Invalid meeting day: {data['cdays']} is not permitted. Please select LWV or MJ."}, 400
@@ -46,10 +48,10 @@ class MeetingController:
             
              # checks the time difference in days for MJ are valid
             elif((endtime-starttime) != time_diff_MJ) and (data["cdays"] == "MJ"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting is must last for 01:15:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting must last for 01:15:00."}, 400
             
             elif((endtime-starttime) != time_diff_LWV) and (data["cdays"] == "LWV"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting is must last for 00:50:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting must last for 00:50:00."}, 400
             
             # checks the meeting is being held during universal hour
             elif ((time(10,00) <= data["starttime"] <= time(11,59)) and data["cdays"] == "MJ") or ((time(10,00) < data["endtime"] <= time(11,59)) and data["cdays"] == "MJ"):
@@ -61,18 +63,18 @@ class MeetingController:
             
             return self.Courses.InsertMeeting(data)
         except Exception as e:
-            print(f"Insertion error: {e}")
-            return {"error": str(e)}, 400
-        
+                return {"error": str(e)}, 400
+
 
     def UpdateMeeting(self,mid,data):
-        starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
-        endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
-        time_diff_MJ = timedelta(hours=1, minutes=15)
-        time_diff_LWV = timedelta(hours=0, minutes=50)
-        data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
-        data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
+
         try:
+            starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
+            endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
+            time_diff_MJ = timedelta(hours=1, minutes=15)
+            time_diff_LWV = timedelta(hours=0, minutes=50)
+            data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
+            data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
             try:
                 mid = int(mid)
             except ValueError:
@@ -91,10 +93,10 @@ class MeetingController:
             
              # checks the time difference in days for MJ are valid
             elif((endtime-starttime) != time_diff_MJ) and (data["cdays"] == "MJ"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting is must last for 01:15:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting must last for 01:15:00."}, 400
             
             elif((endtime-starttime) != time_diff_LWV) and (data["cdays"] == "LWV"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting is must last for 00:50:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting must last for 00:50:00."}, 400
             
             # checks the meeting is being held during universal hour
             elif ((time(10,00) <= data["starttime"] <= time(11,59)) and data["cdays"] == "MJ") or ((time(10,00) < data["endtime"] <= time(11,59)) and data["cdays"] == "MJ"):
