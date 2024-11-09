@@ -65,7 +65,7 @@ class MeetingController:
             return {"error": str(e)}, 400
         
 
-    def UpdateMeeting(self,data):
+    def UpdateMeeting(self,mid,data):
         starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
         endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
         time_diff_MJ = timedelta(hours=1, minutes=15)
@@ -74,13 +74,13 @@ class MeetingController:
         data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
         try:
             try:
-                mid = int(data["mid"])
+                mid = int(mid)
             except ValueError:
-                return {"error": f"Invalid id: {data['mid']} is not a number"}, 400
+                return {"error": f"Invalid id: {mid} is not a number"}, 400
                 
             # mid cannot be negative
             if (mid < 0):
-                return {"error": f"Invalid id {data['mid']} is below 0. Id cannot be a negative number."}, 400
+                return {"error": f"Invalid id {mid} is below 0. Id cannot be a negative number."}, 400
             
             elif (data["cdays"] != "LWV") and (data["cdays"] != "MJ"):
                 return {"error": f"Invalid meeting day: {data['cdays']} is not permitted. Please select LWV or MJ."}, 400
@@ -104,7 +104,7 @@ class MeetingController:
             elif (data["starttime"] >= time(19,45)) or (data["endtime"] > time(19,45)):
                 return {"error": f"Invalid meeting time: meeting cannot be scheduled after 7:45pm"}, 400
             
-            return self.Courses.UpdateMeeting(data)
+            return self.Courses.UpdateMeeting(mid,data)
         except Exception as e:
             # Checks if the primary key exist
             print(f"Update error: {e}")

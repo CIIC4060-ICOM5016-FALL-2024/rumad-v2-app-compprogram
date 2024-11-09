@@ -33,9 +33,9 @@ class MeetingDAO:
 
 
 
-    def UpdateMeeting(self,data):
+    def UpdateMeeting(self,mid,data):
         query = "UPDATE Meeting SET ccode = %s ,starttime = %s ,endtime = %s ,cdays = %s WHERE mid = %s"
-        self.cursor.execute(query,(data["ccode"],data["starttime"],data["endtime"],data["cdays"],data["mid"],))
+        self.cursor.execute(query,(data["ccode"],data["starttime"],data["endtime"],data["cdays"],mid,))
         self.connection.commit()
         if self.cursor.rowcount > 0:
             return {"message": "Meeting updated successfully"}, 200

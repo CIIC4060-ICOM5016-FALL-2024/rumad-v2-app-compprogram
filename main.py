@@ -83,15 +83,13 @@ def DeleteCLassByCID(cid):
 
 #----------------TABLE SECTION------------------------------------------------------------------------------------
 
-@app.route("/compprogram/section",methods=["GET","POST","PUT"])
+@app.route("/compprogram/section",methods=["GET","POST"])
 
 def HandlerSection():
     if request.method == "GET":
         return GetAllSections()
     elif request.method == "POST":
         return InsertSection()
-    elif request.method == "PUT":
-        return UpdateSection()
 #----------GET ALL DATA FOR SECTIONS------------------
 def GetAllSections():
     Controller = SectionController()
@@ -102,13 +100,6 @@ def InsertSection():
     data = request.get_json()
     return Controller.InsertSection(data)
 
-#-------UPDATE AN EXISTENT SECTION---------------------------
-
-def UpdateSection():
-    Controller = SectionController()
-    data = request.get_json()
-    return Controller.UpdateSection(data)
-
 
 #-------GET ALL DATA FOR A SECTION BY SID------------
 
@@ -117,6 +108,15 @@ def UpdateSection():
 def GetSectionBySID(sid):
     Controller = SectionController()
     return jsonify(Controller.GetSectionBySID(sid))
+
+#-------UPDATE AN EXISTENT SECTION---------------------------
+@app.route("/compprogram/section/<sid>",methods=["PUT"])
+
+
+def UpdateSection(sid):
+    Controller = SectionController()
+    data = request.get_json()
+    return Controller.UpdateSection(sid,data)
 
 #-------DELETE SECTION BY SID------------------------
 
@@ -135,15 +135,13 @@ def DeleteSectionBySID(sid):
 
 
 
-@app.route("/compprogram/meeting",methods=["GET","POST","PUT"])
+@app.route("/compprogram/meeting",methods=["GET","POST"])
 
 def HandlerMeeting():
     if request.method == "GET":
         return GetAllMeetings()
     elif request.method == "POST":
         return InsertMeeting()
-    elif request.method == "PUT":
-        return UpdateMeeting()
 #----------GET ALL DATA FOR MEETINGS------------------
 def GetAllMeetings():
     Controller = MeetingController()
@@ -154,13 +152,6 @@ def InsertMeeting():
     data = request.get_json()
     return Controller.InsertMeeting(data)
 
-#-------UPDATE AN EXISTENT MEETING---------------------------
-
-def UpdateMeeting():
-    Controller = MeetingController()
-    data = request.get_json()
-    return Controller.UpdateMeeting(data)
-
 
 #-------GET ALL DATA FOR A MEETING BY MID------------
 
@@ -169,6 +160,16 @@ def UpdateMeeting():
 def GetMeetingByMID(mid):
     Controller = MeetingController()
     return jsonify(Controller.GetMeetingByMID(mid))
+
+
+#-------UPDATE AN EXISTENT MEETING---------------------------
+
+@app.route("/compprogram/meeting/<mid>",methods=["PUT"])
+
+def UpdateMeeting(mid):
+    Controller = MeetingController()
+    data = request.get_json()
+    return Controller.UpdateMeeting(mid,data)
 
 #-------DELETE MEETING BY MID------------------------
 

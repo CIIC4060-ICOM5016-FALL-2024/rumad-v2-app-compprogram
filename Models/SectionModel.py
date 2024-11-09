@@ -33,9 +33,9 @@ class SectionDAO:
 
 
 
-    def UpdateSection(self,data):
+    def UpdateSection(self,sid,data):
         query = "UPDATE SECTION SET roomid = %s ,cid = %s ,mid = %s ,semester = %s ,years = %s ,capacity = %s WHERE sid = %s"
-        self.cursor.execute(query,(data["roomid"],data["cid"],data["mid"],data["semester"],data["years"],data["capacity"],data["sid"],))
+        self.cursor.execute(query,(data["roomid"],data["cid"],data["mid"],data["semester"],data["years"],data["capacity"],sid,))
         self.connection.commit()
         if self.cursor.rowcount > 0:
             return {"message": "Section updated successfully"}, 200
