@@ -42,7 +42,7 @@ class MeetingController:
             
             # checks if the class being inserted is being held before 7:30am
             elif (data["starttime"] < time(7,30)) or (data["endtime"] <= time(7,30)) :
-                return {"error": f"Invalid meeting time: meeeting cannot be scheduled before 7:30am"}, 400
+                return {"error": f"Invalid meeting time: meeting cannot be scheduled before 7:30am"}, 400
             
              # checks the time difference in days for MJ are valid
             elif((endtime-starttime) != time_diff_MJ) and (data["cdays"] == "MJ"):
