@@ -240,15 +240,13 @@ def DeleteRequisiteByPrimaryKey(classid,reqid):
 
 
 
-@app.route("/compprogram/room",methods=["GET","POST","PUT"])
-
+@app.route("/compprogram/room",methods=["GET","POST"])
 def HandlerRoom():
     if request.method == "GET":
         return GetAllRooms()
     elif request.method == "POST":
         return InsertRoom()
-    elif request.method == "PUT":
-        return UpdateRoom()
+
 #----------GET ALL DATA FOR ROOMS------------------
 def GetAllRooms():
     Controller = RoomController()
@@ -259,13 +257,6 @@ def InsertRoom():
     data = request.get_json()
     return Controller.InsertRoom(data)
 
-#-------UPDATE AN EXISTENT ROOM---------------------------
-
-def UpdateRoom():
-    Controller = RoomController()
-    data = request.get_json()
-    return Controller.UpdateRoom(data)
-
 
 #-------GET ALL DATA FOR A ROOM BY RID------------
 
@@ -274,6 +265,16 @@ def UpdateRoom():
 def GetRoomByRID(rid):
     Controller = RoomController()
     return jsonify(Controller.GetRoomByRID(rid))
+
+#-------UPDATE AN EXISTENT ROOM---------------------------
+
+@app.route("/compprogram/room/<rid>",methods=["PUT"])
+
+
+def UpdateRoom(rid):
+    Controller = RoomController()
+    data = request.get_json()
+    return Controller.UpdateRoom(rid,data)
 
 #-------DELETE ROOM BY RID------------------------
 
@@ -292,49 +293,49 @@ def DeleteRoomByRID(rid):
 
 
 
-@app.route("/compprogram/syllabus",methods=["GET","POST","PUT"])
+# @app.route("/compprogram/syllabus",methods=["GET","POST","PUT"])
 
-def HandlerSyllabus():
-    if request.method == "GET":
-        return GetAllSyllabus()
-    elif request.method == "POST":
-        return InsertSyllabus()
-    elif request.method == "PUT":
-        return UpdateSyllabus()
-#----------GET ALL DATA FOR SYLLABUS------------------
-def GetAllSyllabus():
-    Controller = SyllabusController()
-    return jsonify(Controller.GetAllSyllabus())
-#-------INSERT NEW SYLLABUS---------------------------
-def InsertSyllabus():
-    Controller = SyllabusController()
-    data = request.get_json()
-    return Controller.InsertSyllabus(data)
+# def HandlerSyllabus():
+#     if request.method == "GET":
+#         return GetAllSyllabus()
+#     elif request.method == "POST":
+#         return InsertSyllabus()
+#     elif request.method == "PUT":
+#         return UpdateSyllabus()
+# #----------GET ALL DATA FOR SYLLABUS------------------
+# def GetAllSyllabus():
+#     Controller = SyllabusController()
+#     return jsonify(Controller.GetAllSyllabus())
+# #-------INSERT NEW SYLLABUS---------------------------
+# def InsertSyllabus():
+#     Controller = SyllabusController()
+#     data = request.get_json()
+#     return Controller.InsertSyllabus(data)
 
-#-------UPDATE AN EXISTENT SYLLABUS---------------------------
+# #-------UPDATE AN EXISTENT SYLLABUS---------------------------
 
-def UpdateSyllabus  ():
-    Controller = SyllabusController()
-    data = request.get_json()
-    return Controller.UpdateSyllabus(data)
+# def UpdateSyllabus  ():
+#     Controller = SyllabusController()
+#     data = request.get_json()
+#     return Controller.UpdateSyllabus(data)
 
 
-#-------GET ALL DATA FOR A SYLLABUS BY CHUNKID------------
+# #-------GET ALL DATA FOR A SYLLABUS BY CHUNKID------------
 
-@app.route("/compprogram/syllabus/<chunkid>",methods=["GET"])
+# @app.route("/compprogram/syllabus/<chunkid>",methods=["GET"])
         
-def GetSyllabusByCHUNKID(chunkid):
-    Controller = SyllabusController()
-    return jsonify(Controller.GetSyllabusByCHUNKID(chunkid))
+# def GetSyllabusByCHUNKID(chunkid):
+#     Controller = SyllabusController()
+#     return jsonify(Controller.GetSyllabusByCHUNKID(chunkid))
 
-#-------DELETE ROOM BY CHUNKID------------------------
+# #-------DELETE ROOM BY CHUNKID------------------------
 
 
-@app.route("/compprogram/syllabus/<chunkid>",methods=["DELETE"])
+# @app.route("/compprogram/syllabus/<chunkid>",methods=["DELETE"])
 
-def DeleteSyllabusByCHUNKID(chunkid):
-    Controller = SyllabusController()
-    return Controller.DeleteSyllabusByCHUNKID(chunkid)
+# def DeleteSyllabusByCHUNKID(chunkid):
+#     Controller = SyllabusController()
+#     return Controller.DeleteSyllabusByCHUNKID(chunkid)
 
 
 #----------------TABLE SYLLABUS------------------------------------------------------------------------------------
