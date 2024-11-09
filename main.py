@@ -257,7 +257,7 @@ def InsertRoom():
 
 #-------UPDATE AN EXISTENT ROOM---------------------------
 
-def UpdateRoom  ():
+def UpdateRoom():
     Controller = RoomController()
     data = request.get_json()
     return Controller.UpdateRoom(data)
