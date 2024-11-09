@@ -45,19 +45,22 @@ class SectionController:
             return {"error": f"Invalid mid: {data['mid']} is not a number"}, 400
         
         if (data["semester"] != "Fall") and (data["semester"] != "Spring") and (data["semester"] != "V1") and (data["semester"] != "V2"):
-            return {"error": f"Invalid semester: {data['semester']} is not permitted. Please select Fall, Spring, V1, or V2."}, 400       
+            return {"error": f"Invalid semester: {data['semester']} is not permitted. Please select Fall, Spring, V1, or V2. "}, 400       
         
         try:
             years = int(data["years"])
             if (years < 0):
-                return {"error": f"Invalid years {years} is below 0. years cannot be a negative number."}               
+                return {"error": f"Invalid year: the year you gave {years} is below 0. Years cannot be a negative number."}
+            
+            elif (years < 2000):   
+                return {"error": f"Invalid year: the year cannot before the 2000s, and the year you selected was {years}"}        
         except ValueError:
-            return {"error": f"Invalid years: {data['years']} is not a number"}, 400
+            return {"error": f"Invalid year: {data['years']} is not a number"}, 400
         
         try:
             capacity = int(data["capacity"])
             if (capacity < 1):
-                return {"error": f"Invalid capacity {capacity} is below 0. capacity cannot be bellow 1."}               
+                return {"error": f"Invalid capacity: capacity must be at least 1."}               
         except ValueError:
             return {"error": f"Invalid capacity: {data['capacity']} is not a number"}, 400        
 
@@ -71,7 +74,7 @@ class SectionController:
         try:
             sid = int(data["sid"])
             if (sid < 0):
-                return {"error": f"Invalid sid {sid} is below 0. sid cannot be a negative number."}    
+                return {"error": f"Invalid sid: {sid} is below 0. sid cannot be a negative number."}    
         except ValueError:
             return {"error": f"Invalid sid: {data['sid']} is not a number"}, 400
         
@@ -102,14 +105,17 @@ class SectionController:
         try:
             years = int(data["years"])
             if (years < 0):
-                return {"error": f"Invalid years {years} is below 0. years cannot be a negative number."}               
+                return {"error": f"Invalid year: the year you gave {years} is below 0. Years cannot be a negative number."}
+            
+            elif (years < 2000):   
+                return {"error": f"Invalid year: the year cannot before the 2000s, and the year you selected was {years}"}               
         except ValueError:
             return {"error": f"Invalid years: {data['years']} is not a number"}, 400
         
         try:
             capacity = int(data["capacity"])
             if (capacity < 1):
-                return {"error": f"Invalid capacity {capacity} is below 0. capacity cannot be bellow 1."}               
+                return {"error": f"Invalid capacity: capacity must be at least 1."}               
         except ValueError:
             return {"error": f"Invalid capacity: {data['capacity']} is not a number"}, 400        
 
