@@ -29,14 +29,14 @@ class MeetingController:
         starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
         endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
         time_diff_MJ = timedelta(hours=1, minutes=15)
-        time_diff_LMV = timedelta(hours=0, minutes=50)
+        time_diff_LWV = timedelta(hours=0, minutes=50)
         data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
         data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
         print(endtime-starttime)
          
         try:
             # checks if the days are valid 
-            if (data["cdays"] != "LMV") and (data["cdays"] != "MJ"):
+            if (data["cdays"] != "LWV") and (data["cdays"] != "MJ"):
                 return {"error": f"This meeting not being held in a valid day"}, 400
             
             # checks if the class being inserted is being held before 7:30am
@@ -47,7 +47,7 @@ class MeetingController:
             elif((endtime-starttime) != time_diff_MJ) and (data["cdays"] == "MJ"):
                 return {"error": f"The meeting does not last for 1:15 hours"}, 400
             
-            elif((endtime-starttime) != time_diff_LMV) and (data["cdays"] == "LMV"):
+            elif((endtime-starttime) != time_diff_LWV) and (data["cdays"] == "LWV"):
                 return {"error": f"The meeting does not last for 50 minutes"}, 400
             
             # checks the meeting is being held during universal hour
