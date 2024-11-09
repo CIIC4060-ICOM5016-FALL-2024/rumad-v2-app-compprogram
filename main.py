@@ -31,15 +31,14 @@ def home():
     return "Welcome to the New Putty"
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
-@app.route("/compprogram/class",methods=["GET","POST","PUT"])
+@app.route("/compprogram/class",methods=["GET","POST"])
 
 def HandlerCLass():
     if request.method == "GET":
         return GetAllClasses()
     elif request.method == "POST":
         return InsertClass()
-    elif request.method == "PUT":
-        return UpdateClass()
+
 #----------GET ALL DATA FOR CLASS------------------
 def GetAllClasses():
     Controller = ClassController()
@@ -50,13 +49,6 @@ def InsertClass():
     data = request.get_json()
     return Controller.InsertClass(data)
 
-#-------UPDATE AN EXISTENT CLASS---------------------------
-
-def UpdateClass():
-    Controller = ClassController()
-    data = request.get_json()
-    return Controller.UpdateClass(data)
-
 
 #-------GET ALL DATA FOR A CLASS BY CID------------
 
@@ -65,6 +57,15 @@ def UpdateClass():
 def GetClassByCID(cid):
     Controller = ClassController()
     return jsonify(Controller.GetClassByCID(cid))
+
+
+#-------UPDATE AN EXISTENT CLASS---------------------------
+@app.route("/compprogram/class/<cid>",methods=["PUT"])
+
+def UpdateClass(cid):
+    Controller = ClassController()
+    data = request.get_json()
+    return Controller.UpdateClass(cid,data)
 
 #-------DELETE CLASS BY CID------------------------
 
