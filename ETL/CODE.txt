@@ -28,6 +28,9 @@
 --                      cid int references Class(cid),mid int references MEETING(mid),
 --                     semester varchar(100),years varchar(100),capacity int);
 
+--CREATE TABLE SYLLABUS(chunkid serial Primary Key,courseid int references CLASS(cid),embedding_text text,chunk varchar(100));
+--
+
 ---------------------------------------------------------------------------------------------------------------------------
 -------UPLOADING THE DATA INTO THE TABLES CALLED MEETING, CLASS AND ROOM--------------------------------------------------------------------------------------------------------------------
 
