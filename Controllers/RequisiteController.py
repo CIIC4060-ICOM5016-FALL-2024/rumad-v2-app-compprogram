@@ -53,24 +53,24 @@ class RequisiteController:
 
 
 
-    def UpdateRequisite(self,data):
+    def UpdateRequisite(self,classid,reqid,data):
         try:
             #The requid must be true or false, other stuff will be considered a bad input
             if (bool(data["prereq"]) != True and bool(data["prereq"]) != False):
                 return {"error":f"The reqid must be True or False and yours is: {data['prereq']}"}, 400
             #Verify if the data is an integer, if is not: is consider a bad input
-            int(data["reqid"])
-            int(data["classid"])
-            return self.Courses.UpdateRequisite(data)
+            reqid = int(reqid)
+            classid = int(classid)
+            return self.Courses.UpdateRequisite(classid,reqid,data)
         except Exception as e:
             try:
                 #once again try to make them integer to indentify the type of error it it is an primar key not found 
                 # or a varchar instead of a integer
-                int(data["classid"])
-                int(data["reqid"])
+                classid = int(classid)
+                reqid = int(reqid)
                 return {"error": str(e)}, 400
             except:
-                return {"error": f"The id's have to be integers and yours are: classid: {data['classid']} , reqid: {data['reqid']}"}, 400
+                return {"error": f"The id's have to be integers and yours are: classid: {classid} , reqid: {reqid}"}, 400
 
     def DeleteRequisiteByPrimaryKey(self,classid,reqid):
         try:
@@ -80,8 +80,8 @@ class RequisiteController:
             return self.Courses.DeleteRequisiteByPrimaryKey(classid,reqid)
         except Exception as e:
             try:
-                int(classid)
-                int(reqid)
+                classid = int(classid)
+                reqid  = int(reqid)
                 return {"error": str(e)}, 400
             except:
                 return {"error": f"The id's have to be integers and yours are: classid: {classid} , reqid: {reqid}"}, 400

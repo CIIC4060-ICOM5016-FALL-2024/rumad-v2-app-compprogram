@@ -31,15 +31,14 @@ def home():
     return "Welcome to the New Putty"
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
-@app.route("/compprogram/class",methods=["GET","POST","PUT"])
+@app.route("/compprogram/class",methods=["GET","POST"])
 
 def HandlerCLass():
     if request.method == "GET":
         return GetAllClasses()
     elif request.method == "POST":
         return InsertClass()
-    elif request.method == "PUT":
-        return UpdateClass()
+
 #----------GET ALL DATA FOR CLASS------------------
 def GetAllClasses():
     Controller = ClassController()
@@ -50,13 +49,6 @@ def InsertClass():
     data = request.get_json()
     return Controller.InsertClass(data)
 
-#-------UPDATE AN EXISTENT CLASS---------------------------
-
-def UpdateClass():
-    Controller = ClassController()
-    data = request.get_json()
-    return Controller.UpdateClass(data)
-
 
 #-------GET ALL DATA FOR A CLASS BY CID------------
 
@@ -65,6 +57,15 @@ def UpdateClass():
 def GetClassByCID(cid):
     Controller = ClassController()
     return jsonify(Controller.GetClassByCID(cid))
+
+
+#-------UPDATE AN EXISTENT CLASS---------------------------
+@app.route("/compprogram/class/<cid>",methods=["PUT"])
+
+def UpdateClass(cid):
+    Controller = ClassController()
+    data = request.get_json()
+    return Controller.UpdateClass(cid,data)
 
 #-------DELETE CLASS BY CID------------------------
 
@@ -82,15 +83,13 @@ def DeleteCLassByCID(cid):
 
 #----------------TABLE SECTION------------------------------------------------------------------------------------
 
-@app.route("/compprogram/section",methods=["GET","POST","PUT"])
+@app.route("/compprogram/section",methods=["GET","POST"])
 
 def HandlerSection():
     if request.method == "GET":
         return GetAllSections()
     elif request.method == "POST":
         return InsertSection()
-    elif request.method == "PUT":
-        return UpdateSection()
 #----------GET ALL DATA FOR SECTIONS------------------
 def GetAllSections():
     Controller = SectionController()
@@ -101,13 +100,6 @@ def InsertSection():
     data = request.get_json()
     return Controller.InsertSection(data)
 
-#-------UPDATE AN EXISTENT SECTION---------------------------
-
-def UpdateSection():
-    Controller = SectionController()
-    data = request.get_json()
-    return Controller.UpdateSection(data)
-
 
 #-------GET ALL DATA FOR A SECTION BY SID------------
 
@@ -116,6 +108,15 @@ def UpdateSection():
 def GetSectionBySID(sid):
     Controller = SectionController()
     return jsonify(Controller.GetSectionBySID(sid))
+
+#-------UPDATE AN EXISTENT SECTION---------------------------
+@app.route("/compprogram/section/<sid>",methods=["PUT"])
+
+
+def UpdateSection(sid):
+    Controller = SectionController()
+    data = request.get_json()
+    return Controller.UpdateSection(sid,data)
 
 #-------DELETE SECTION BY SID------------------------
 
@@ -134,15 +135,13 @@ def DeleteSectionBySID(sid):
 
 
 
-@app.route("/compprogram/meeting",methods=["GET","POST","PUT"])
+@app.route("/compprogram/meeting",methods=["GET","POST"])
 
 def HandlerMeeting():
     if request.method == "GET":
         return GetAllMeetings()
     elif request.method == "POST":
         return InsertMeeting()
-    elif request.method == "PUT":
-        return UpdateMeeting()
 #----------GET ALL DATA FOR MEETINGS------------------
 def GetAllMeetings():
     Controller = MeetingController()
@@ -153,13 +152,6 @@ def InsertMeeting():
     data = request.get_json()
     return Controller.InsertMeeting(data)
 
-#-------UPDATE AN EXISTENT MEETING---------------------------
-
-def UpdateMeeting():
-    Controller = MeetingController()
-    data = request.get_json()
-    return Controller.UpdateMeeting(data)
-
 
 #-------GET ALL DATA FOR A MEETING BY MID------------
 
@@ -168,6 +160,16 @@ def UpdateMeeting():
 def GetMeetingByMID(mid):
     Controller = MeetingController()
     return jsonify(Controller.GetMeetingByMID(mid))
+
+
+#-------UPDATE AN EXISTENT MEETING---------------------------
+
+@app.route("/compprogram/meeting/<mid>",methods=["PUT"])
+
+def UpdateMeeting(mid):
+    Controller = MeetingController()
+    data = request.get_json()
+    return Controller.UpdateMeeting(mid,data)
 
 #-------DELETE MEETING BY MID------------------------
 
@@ -185,15 +187,13 @@ def DeleteMeetingByMID(mid):
 
 #----------------TABLE REQUISITE------------------------------------------------------------------------------------
 
-@app.route("/compprogram/requisite",methods=["GET","POST","PUT"])
+@app.route("/compprogram/requisite",methods=["GET","POST"])
 
 def HandlerRequisite():
     if request.method == "GET":
         return GetAllRequisites()
     elif request.method == "POST":
         return InsertRequisite()
-    elif request.method == "PUT":
-        return UpdateRequisite()
 #----------GET ALL DATA FOR REQUISITE------------------
 def GetAllRequisites():
     Controller = RequisiteController()
@@ -204,12 +204,6 @@ def InsertRequisite():
     data = request.get_json()
     return Controller.InsertRequisite(data)
 
-#-------UPDATE AN EXISTENT REQUISITE---------------------------
-
-def UpdateRequisite():
-    Controller = RequisiteController()
-    data = request.get_json()
-    return Controller.UpdateRequisite(data)
 
 
 #-------GET ALL DATA FOR A REQUISITE BY PrimaryKey------------
@@ -219,6 +213,16 @@ def UpdateRequisite():
 def GetRequisiteByPrimaryKey(classid,reqid):
     Controller = RequisiteController()
     return jsonify(Controller.GetRequisiteByPrimaryKey(classid,reqid))
+
+#-------UPDATE AN EXISTENT REQUISITE---------------------------
+
+@app.route("/compprogram/requisite/<classid>/<reqid>",methods=["PUT"])
+
+def UpdateRequisite(classid,reqid):
+    Controller = RequisiteController()
+    data = request.get_json()
+    print(classid,reqid)
+    return Controller.UpdateRequisite(classid,reqid,data)
 
 #-------DELETE REQUISITE BY PrimaryKey------------------------
 
@@ -236,15 +240,13 @@ def DeleteRequisiteByPrimaryKey(classid,reqid):
 
 
 
-@app.route("/compprogram/room",methods=["GET","POST","PUT"])
-
+@app.route("/compprogram/room",methods=["GET","POST"])
 def HandlerRoom():
     if request.method == "GET":
         return GetAllRooms()
     elif request.method == "POST":
         return InsertRoom()
-    elif request.method == "PUT":
-        return UpdateRoom()
+
 #----------GET ALL DATA FOR ROOMS------------------
 def GetAllRooms():
     Controller = RoomController()
@@ -255,13 +257,6 @@ def InsertRoom():
     data = request.get_json()
     return Controller.InsertRoom(data)
 
-#-------UPDATE AN EXISTENT ROOM---------------------------
-
-def UpdateRoom():
-    Controller = RoomController()
-    data = request.get_json()
-    return Controller.UpdateRoom(data)
-
 
 #-------GET ALL DATA FOR A ROOM BY RID------------
 
@@ -270,6 +265,16 @@ def UpdateRoom():
 def GetRoomByRID(rid):
     Controller = RoomController()
     return jsonify(Controller.GetRoomByRID(rid))
+
+#-------UPDATE AN EXISTENT ROOM---------------------------
+
+@app.route("/compprogram/room/<rid>",methods=["PUT"])
+
+
+def UpdateRoom(rid):
+    Controller = RoomController()
+    data = request.get_json()
+    return Controller.UpdateRoom(rid,data)
 
 #-------DELETE ROOM BY RID------------------------
 
@@ -288,49 +293,49 @@ def DeleteRoomByRID(rid):
 
 
 
-@app.route("/compprogram/syllabus",methods=["GET","POST","PUT"])
+# @app.route("/compprogram/syllabus",methods=["GET","POST","PUT"])
 
-def HandlerSyllabus():
-    if request.method == "GET":
-        return GetAllSyllabus()
-    elif request.method == "POST":
-        return InsertSyllabus()
-    elif request.method == "PUT":
-        return UpdateSyllabus()
-#----------GET ALL DATA FOR SYLLABUS------------------
-def GetAllSyllabus():
-    Controller = SyllabusController()
-    return jsonify(Controller.GetAllSyllabus())
-#-------INSERT NEW SYLLABUS---------------------------
-def InsertSyllabus():
-    Controller = SyllabusController()
-    data = request.get_json()
-    return Controller.InsertSyllabus(data)
+# def HandlerSyllabus():
+#     if request.method == "GET":
+#         return GetAllSyllabus()
+#     elif request.method == "POST":
+#         return InsertSyllabus()
+#     elif request.method == "PUT":
+#         return UpdateSyllabus()
+# #----------GET ALL DATA FOR SYLLABUS------------------
+# def GetAllSyllabus():
+#     Controller = SyllabusController()
+#     return jsonify(Controller.GetAllSyllabus())
+# #-------INSERT NEW SYLLABUS---------------------------
+# def InsertSyllabus():
+#     Controller = SyllabusController()
+#     data = request.get_json()
+#     return Controller.InsertSyllabus(data)
 
-#-------UPDATE AN EXISTENT SYLLABUS---------------------------
+# #-------UPDATE AN EXISTENT SYLLABUS---------------------------
 
-def UpdateSyllabus  ():
-    Controller = SyllabusController()
-    data = request.get_json()
-    return Controller.UpdateSyllabus(data)
+# def UpdateSyllabus  ():
+#     Controller = SyllabusController()
+#     data = request.get_json()
+#     return Controller.UpdateSyllabus(data)
 
 
-#-------GET ALL DATA FOR A SYLLABUS BY CHUNKID------------
+# #-------GET ALL DATA FOR A SYLLABUS BY CHUNKID------------
 
-@app.route("/compprogram/syllabus/<chunkid>",methods=["GET"])
+# @app.route("/compprogram/syllabus/<chunkid>",methods=["GET"])
         
-def GetSyllabusByCHUNKID(chunkid):
-    Controller = SyllabusController()
-    return jsonify(Controller.GetSyllabusByCHUNKID(chunkid))
+# def GetSyllabusByCHUNKID(chunkid):
+#     Controller = SyllabusController()
+#     return jsonify(Controller.GetSyllabusByCHUNKID(chunkid))
 
-#-------DELETE ROOM BY CHUNKID------------------------
+# #-------DELETE ROOM BY CHUNKID------------------------
 
 
-@app.route("/compprogram/syllabus/<chunkid>",methods=["DELETE"])
+# @app.route("/compprogram/syllabus/<chunkid>",methods=["DELETE"])
 
-def DeleteSyllabusByCHUNKID(chunkid):
-    Controller = SyllabusController()
-    return Controller.DeleteSyllabusByCHUNKID(chunkid)
+# def DeleteSyllabusByCHUNKID(chunkid):
+#     Controller = SyllabusController()
+#     return Controller.DeleteSyllabusByCHUNKID(chunkid)
 
 
 #----------------TABLE SYLLABUS------------------------------------------------------------------------------------

@@ -70,13 +70,13 @@ class SectionController:
             print(f"Insertion error: {e}")
             return {"error": str(e)}, 400
 
-    def UpdateSection(self,data):
+    def UpdateSection(self,sid,data):
         try:
-            sid = int(data["sid"])
+            sid = int(sid)
             if (sid < 0):
                 return {"error": f"Invalid sid: {sid} is below 0. sid cannot be a negative number."}, 400    
         except ValueError:
-            return {"error": f"Invalid sid: {data['sid']} is not a number"}, 400
+            return {"error": f"Invalid sid: {sid} is not a number"}, 400
         
         try:
             roomid = int(data["roomid"])
@@ -120,7 +120,7 @@ class SectionController:
             return {"error": f"Invalid capacity: {data['capacity']} is not a number"}, 400        
 
         try:
-            return self.Courses.UpdateSection(data)
+            return self.Courses.UpdateSection(sid,data)
         except Exception as e:
             print(f"Update error: {e}")
             return {"error": str(e)}, 400

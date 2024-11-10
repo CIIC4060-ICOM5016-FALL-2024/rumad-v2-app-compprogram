@@ -47,7 +47,7 @@ class RoomController:
                 return {"error": f"The room_number must be a number and your is: {data['room_number']}"}, 400                                    
                 
 
-    def UpdateRoom(self,data):
+    def UpdateRoom(self,rid,data):
         try:
             # DO NOT ACCEPT BUILDINGS THAT ARE NOT CALLED, Stefani, Monzon OR Software
             Acceptable_Buildings = ["Stefani","Monzon","Software"]
@@ -57,18 +57,20 @@ class RoomController:
                 return {"error": f"At least 1 person, should be in a room and you have {data['capacity']}"},400
             if(int(data["room_number"]) < 0):
                 return {"error":"The rooms must be greater or equal to 0"},400
-            return self.Courses.UpdateRoom(data)
+            if(int(rid) < 0):
+                return {"error":"The rid must me greater or equal to 0"},400
+            return self.Courses.UpdateRoom(int(rid),data)
         except Exception as e:
             try:                                          
                 int(data["room_number"])              
-                int(data["rid"])              
+                rid = int(rid)              
                 return {"error": f"The capacity must be an integer and your is: {data['capacity']}"}, 400
             except:
                 try:
-                    int(data["rid"])
+                    rid = int(rid)
                     return {"error": f"The room_number must be a number and your is: {data['room_number']}"}, 400  
                 except: 
-                    return {"error":f"The rid must be an interger and your is: {data['rid']}"}, 400
+                    return {"error":f"The rid must be an interger and your is: {rid}"}, 400
 
     def DeleteRoomByRID(self,rid):
         try:

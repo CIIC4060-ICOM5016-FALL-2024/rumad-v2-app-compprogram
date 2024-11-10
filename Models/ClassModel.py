@@ -33,9 +33,9 @@ class ClassDAO:
 
 
 
-    def UpdateClass(self,data):
+    def UpdateClass(self,cid,data):
         query = "UPDATE CLASS SET cname = %s ,ccode = %s ,cdesc = %s ,term = %s ,years = %s ,cred = %s ,csyllabus = %s WHERE cid = %s"
-        self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],data["cid"],))
+        self.cursor.execute(query,(data["cname"],data["ccode"],data["cdesc"],data["term"],data["years"],data["cred"],data["csyllabus"],cid,))
         self.connection.commit()
         if self.cursor.rowcount > 0:
             return {"message": "Class updated successfully"}, 200

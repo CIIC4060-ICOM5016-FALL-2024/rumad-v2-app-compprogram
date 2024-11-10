@@ -80,9 +80,9 @@ class ClassController:
         except Exception as e:
             return {"error": str(e)}, 400
 
-    def UpdateClass(self,data):
+    def UpdateClass(self,cid,data):
         try:
-            return self.Courses.UpdateClass(data)
+            return self.Courses.UpdateClass(cid,data)
         except Exception as e:
             print(f"Update error: {e}")
             return {"error": str(e)}, 400
