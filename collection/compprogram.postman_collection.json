@@ -1,0 +1,906 @@
+{
+	"info": {
+		"_postman_id": "4d1604a5-b4b8-4fc3-87cf-65598cae87a7",
+		"name": "compprogram",
+		"description": "All URL for every route in the application called compprogram",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34110353",
+		"_collection_link": "https://losdatabasemasters.postman.co/workspace/New-Team-Workspace~106db886-7fae-435a-8f10-426044deb754/collection/34110353-4d1604a5-b4b8-4fc3-87cf-65598cae87a7?action=share&source=collection_link&creator=34110353"
+	},
+	"item": [
+		{
+			"name": "CLass",
+			"item": [
+				{
+					"name": "GetAllClass",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/class",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"class"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetClassByCID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/class/2",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"class",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertClass",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"ccode\": \"3015\",\r\n        \"cdesc\": \"Introduction to Computer Programming I\",\r\n        \"cname\": \"CIIC\",\r\n        \"cred\": 4,\r\n        \"csyllabus\": \"https://www.uprm.edu/cse/wp-content/uploads/sites/153/2020/03/CIIC-3015-Introduction-to-Computer-Programming-I.pdf\",\r\n        \"term\": \"First Semester, Second Semester\",\r\n        \"years\": \"Every Year\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/class",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"class"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClassBYCID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"ccode\": \"3015\",\r\n        \"cdesc\": \"Introduction to Computer Programming I\",\r\n        \"cname\": \"CIIC\",\r\n        \"cred\": 4,\r\n        \"csyllabus\": \"https://www.uprm.edu/cse/wp-content/uploads/sites/153/2020/03/CIIC-3015-Introduction-to-Computer-Programming-I.pdf\",\r\n        \"term\": \"First Semester, Second Semester\",\r\n        \"years\": \"Every Year\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/class/2",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"class",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteClassByCID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/class/2",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"class",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Requisite",
+			"item": [
+				{
+					"name": "GetAllRequisite",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/requisite",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"requisite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRquisiteByCLASSID_REQID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/requisite/26/6",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"requisite",
+								"26",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertRequisite",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"classid\": 26,\r\n    \"prereq\": \"True\",\r\n    \"reqid\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/requisite",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"requisite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateRequisiteByRID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"prereq\": \"True\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/requisite/26/8",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"requisite",
+								"26",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteRequisiteByCLASSID_REQID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/requisite/26/8",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"requisite",
+								"26",
+								"8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Section",
+			"item": [
+				{
+					"name": "GetAllSection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/section",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"section"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSectionBySID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/section/9",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"section",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertSection",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  //Ejemplo: Json File\r\n  {\r\n    \"capacity\": 30,\r\n    \"cid\": 6,\r\n    \"mid\": 15,\r\n    \"roomid\": 11,\r\n    \"semester\": \"V2\",\r\n    \"years\": \"2020\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/section",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"section"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateSectionBYSID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  //Ejemplo: Json File\r\n  {\r\n    \"capacity\": 30,\r\n    \"cid\": 6,\r\n    \"mid\": 15,\r\n    \"roomid\": 11,\r\n    \"semester\": \"V2\",\r\n    \"years\": \"2020\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/section/9",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"section",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteSectionBySID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/section/9",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"section",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Meeting",
+			"item": [
+				{
+					"name": "GetAllMeeting",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/meeting",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"meeting"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMeetingByMID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/meeting/9",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"meeting",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertMeeting",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  //Ejemplo: Json File\r\n{\r\n  \"ccode\":\"080\",\r\n  \"cdays\": \"MJ\",\r\n  \"starttime\": \"07:30:00\",\r\n  \"endtime\": \"08:45:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/meeting",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"meeting"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMeetingsBYMID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  //Ejemplo: Json File\r\n{\r\n  \"ccode\":\"080\",\r\n  \"cdays\": \"MJ\",\r\n  \"starttime\": \"07:30:00\",\r\n  \"endtime\": \"08:45:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/meeting/9",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"meeting",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMeetingByMID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/meeting/9",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"meeting",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Room",
+			"item": [
+				{
+					"name": "GetAllRoom",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRoomByRID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room/9",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertRoom",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"building\": \"Stefani\",\r\n        \"capacity\": 120,\r\n        \"room_number\": \"113\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room/1",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateRoomBYRID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"building\": \"Stefani\",\r\n        \"capacity\": 120,\r\n        \"rid\": 1,\r\n        \"room_number\": \"113\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room/1",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteRoomByRID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room/1",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LocalStatistics",
+			"item": [
+				{
+					"name": "Most Capacity Per Rooms",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room/Monzon/capacity",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room",
+								"Monzon",
+								"capacity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Most Capacity Ratio",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room/2/ratio",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room",
+								"2",
+								"ratio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Most Class Per Room",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/room/2/classes",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"room",
+								"2",
+								"classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Most Class Per Semester and Year",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/classes/2021/Fall",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"classes",
+								"2021",
+								"Fall"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GlobalStatistics",
+			"item": [
+				{
+					"name": "Most Meetings Per Sections",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/most/meeting",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"most",
+								"meeting"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Most Class Per Classid and Reqid",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/most/prerequisite",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"most",
+								"prerequisite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Least Class Offered",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/least/classes",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"least",
+								"classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Total Section Per Year",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://compprogram-4797fd7d8b7f.herokuapp.com/compprogram/section/year",
+							"protocol": "https",
+							"host": [
+								"compprogram-4797fd7d8b7f",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"compprogram",
+								"section",
+								"year"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
