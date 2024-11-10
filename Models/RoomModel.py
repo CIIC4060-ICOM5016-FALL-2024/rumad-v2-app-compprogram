@@ -32,9 +32,9 @@ class RoomDAO:
 
 
 
-    def UpdateRoom(self,data):
+    def UpdateRoom(self,rid,data):
         query = "UPDATE Room SET building = %s ,room_number = %s ,capacity = %s WHERE rid = %s"
-        self.cursor.execute(query,(data["building"],data["room_number"],data["capacity"],data["rid"],))
+        self.cursor.execute(query,(data["building"],data["room_number"],data["capacity"],rid,))
         self.connection.commit()
         if self.cursor.rowcount > 0:
             return {"message": "Room updated successfully"}, 200

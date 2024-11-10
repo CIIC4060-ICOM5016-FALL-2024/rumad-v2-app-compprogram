@@ -23,19 +23,21 @@ class MeetingController:
             data = self.Courses.GetMeetingByMID(mid)
             return self.Courses.Make_Dictionary(data)
         except Exception as e:
-            return {"error": f"This is not a valid mid: {mid}"}
+            return {"error": f"This is not a valid mid: {mid}"}, 400
     
     def InsertMeeting(self,data):
-        # eliminate the try-except later, it's not doing anything
-        starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
-        endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
-        time_diff_MJ = timedelta(hours=1, minutes=15)
-        time_diff_LWV = timedelta(hours=0, minutes=50)
-        data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
-        data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
-        print(endtime-starttime)
+
          
         try:
+            # eliminate the try-except later, it's not doing anything
+            starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
+            endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
+            time_diff_MJ = timedelta(hours=1, minutes=15)
+            time_diff_LWV = timedelta(hours=0, minutes=50)
+            data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
+            data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
+
+                
             # checks if the days are valid 
             if (data["cdays"] != "LWV") and (data["cdays"] != "MJ"):
                 return {"error": f"Invalid meeting day: {data['cdays']} is not permitted. Please select LWV or MJ."}, 400
@@ -46,10 +48,10 @@ class MeetingController:
             
              # checks the time difference in days for MJ are valid
             elif((endtime-starttime) != time_diff_MJ) and (data["cdays"] == "MJ"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting is must last for 01:15:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting must last for 01:15:00."}, 400
             
             elif((endtime-starttime) != time_diff_LWV) and (data["cdays"] == "LWV"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting is must last for 00:50:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting must last for 00:50:00."}, 400
             
             # checks the meeting is being held during universal hour
             elif ((time(10,00) <= data["starttime"] <= time(11,59)) and data["cdays"] == "MJ") or ((time(10,00) < data["endtime"] <= time(11,59)) and data["cdays"] == "MJ"):
@@ -61,26 +63,26 @@ class MeetingController:
             
             return self.Courses.InsertMeeting(data)
         except Exception as e:
-            print(f"Insertion error: {e}")
-            return {"error": str(e)}, 400
-        
+                return {"error": str(e)}, 400
 
-    def UpdateMeeting(self,data):
-        starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
-        endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
-        time_diff_MJ = timedelta(hours=1, minutes=15)
-        time_diff_LWV = timedelta(hours=0, minutes=50)
-        data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
-        data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
+
+    def UpdateMeeting(self,mid,data):
+
         try:
+            starttime = datetime.strptime(data["starttime"], "%H:%M:%S")
+            endtime = datetime.strptime(data["endtime"], "%H:%M:%S")
+            time_diff_MJ = timedelta(hours=1, minutes=15)
+            time_diff_LWV = timedelta(hours=0, minutes=50)
+            data["starttime"] = datetime.strptime(data["starttime"], "%H:%M:%S").time()
+            data["endtime"] = datetime.strptime(data["endtime"], "%H:%M:%S").time()
             try:
-                mid = int(data["mid"])
+                mid = int(mid)
             except ValueError:
-                return {"error": f"Invalid id: {data['mid']} is not a number"}, 400
+                return {"error": f"Invalid id: {mid} is not a number"}, 400
                 
             # mid cannot be negative
             if (mid < 0):
-                return {"error": f"Invalid id {data['mid']} is below 0. Id cannot be a negative number."}
+                return {"error": f"Invalid id {mid} is below 0. Id cannot be a negative number."}, 400
             
             elif (data["cdays"] != "LWV") and (data["cdays"] != "MJ"):
                 return {"error": f"Invalid meeting day: {data['cdays']} is not permitted. Please select LWV or MJ."}, 400
@@ -91,10 +93,10 @@ class MeetingController:
             
              # checks the time difference in days for MJ are valid
             elif((endtime-starttime) != time_diff_MJ) and (data["cdays"] == "MJ"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting is must last for 01:15:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For MJ days, the meeting must last for 01:15:00."}, 400
             
             elif((endtime-starttime) != time_diff_LWV) and (data["cdays"] == "LWV"):
-                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting is must last for 00:50:00."}, 400
+                return {"error": f"Invalid duration: your current duration is {endtime-starttime}. For LWV days, the meeting must last for 00:50:00."}, 400
             
             # checks the meeting is being held during universal hour
             elif ((time(10,00) <= data["starttime"] <= time(11,59)) and data["cdays"] == "MJ") or ((time(10,00) < data["endtime"] <= time(11,59)) and data["cdays"] == "MJ"):
@@ -104,7 +106,7 @@ class MeetingController:
             elif (data["starttime"] >= time(19,45)) or (data["endtime"] > time(19,45)):
                 return {"error": f"Invalid meeting time: meeting cannot be scheduled after 7:45pm"}, 400
             
-            return self.Courses.UpdateMeeting(data)
+            return self.Courses.UpdateMeeting(mid,data)
         except Exception as e:
             # Checks if the primary key exist
             print(f"Update error: {e}")
@@ -117,7 +119,7 @@ class MeetingController:
             except ValueError:
                 return {"error": f"Invalid type for id: {mid} is not a number"}, 400
             if (mid < 0):
-                return {"error": f"Invalid id {mid} is below 0. Id cannot be a negative number."}
+                return {"error": f"Invalid id {mid} is below 0. Id cannot be a negative number."}, 400
 
             return self.Courses.DeleteMeetingByMID(mid)
         except Exception as e:
