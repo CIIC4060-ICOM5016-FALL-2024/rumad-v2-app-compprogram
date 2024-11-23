@@ -6,7 +6,7 @@ class MostCapacityRatioDAO:
         self.cursor = self.connection.cursor()
         
     def GET_MOST_CAPACITY_RATIO(self,rid):
-        query = """SELECT rid,room_number, (section.capacity::Float)/(room.capacity::Float) * 100  as student_to_capacity_ratio
+        query = """SELECT rid,room_number, section.sid,(section.capacity::Float)/(room.capacity::Float) * 100  as student_to_capacity_ratio
                     FROM section
                     INNER JOIN room
                     ON room.rid = section.roomid
@@ -24,5 +24,6 @@ class MostCapacityRatioDAO:
         result = {}
         result["rid"] = data[0]
         result["room_number"] = data[1]
-        result["student_to_capacity_ratio"] = data[2]
+        result["sid"] = data[2]
+        result["student_to_capacity_ratio"] = data[3]
         return result
