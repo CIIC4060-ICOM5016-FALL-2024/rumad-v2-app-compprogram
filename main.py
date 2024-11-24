@@ -30,10 +30,8 @@ CORS(app)
 #----------------WELCOME-------------------------------------------------------------------------------------------------
 @app.route("/")
 def home():
-    if st.button("Go to class"):
-        st.session_state.page("GetAllClasses")
     return "Welcome to the New Putty"
-    # return st.write("Welcome to the new putty")
+
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
 @app.route("/compprogram/class",methods=["GET","POST"])
