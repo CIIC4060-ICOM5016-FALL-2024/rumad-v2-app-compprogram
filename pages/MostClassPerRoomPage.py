@@ -2,7 +2,7 @@ from Controllers.MostClassPerRoomController import MostClassPerRoomController
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-st.write("Most Class Per Room")
+st.title("Top 3 classes that where taught the most per room")
 
 
 try:

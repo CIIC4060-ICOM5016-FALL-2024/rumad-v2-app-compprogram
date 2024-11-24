@@ -5,7 +5,7 @@ import plotly_express as px
 
 
 
-st.title("Most Capacity Ratio")
+st.title("Top 3 sections with the most student-to-capacity ratio")
 try:
     rid = st.text_input("Insert RID")
 

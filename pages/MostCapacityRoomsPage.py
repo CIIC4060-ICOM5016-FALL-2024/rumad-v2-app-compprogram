@@ -2,7 +2,7 @@ from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-st.write("Most Capacity Ratio Room")
+st.title("Top 3 rooms with the most capacity")
 
 
 Controller = MostCapacityRoomsController()

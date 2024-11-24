@@ -2,7 +2,7 @@ from Controllers.MostClassPerSemesterYearController import MostClassPerSemesterY
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-st.write("Most Class Per Semester Year")
+st.title("Top 3 most taught classes per semester per year")
 
 
 try:

@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 
 
-st.title("Least Class Taught")
+st.title("Top 3 classes that appears the most as prerequisite to other classes")
 
 
 Controller = MostPrerequisiteController()

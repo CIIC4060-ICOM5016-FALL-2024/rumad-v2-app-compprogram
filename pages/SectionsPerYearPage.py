@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 
 
-st.title("Least Class Taught")
+st.title("Total number of sections per year")
 
 
 Controller = SectionsPerYearController()

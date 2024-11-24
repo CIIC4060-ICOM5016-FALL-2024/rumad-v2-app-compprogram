@@ -5,7 +5,7 @@ import plotly.express as px
 
 
 
-st.title("Meeting Most Section")
+st.title("Top 5 meetings with the most sections")
 
 
 Controller = MeetingMostSectionController()
