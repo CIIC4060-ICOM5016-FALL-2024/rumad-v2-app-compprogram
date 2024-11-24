@@ -7,7 +7,9 @@ st.session_state.page = page
 
 if st.session_state.page == "Home":
     # Render home page content
-    st.write("Welcome to the New Putty")
+    st.header("Welcome to the New Putty")
+    st.write("In the side bar, you can see all the different options for all the local and Global Statistics")
+    st.write("Also, in the current Drop Down list you can verify all the information of all the tables")
 elif st.session_state.page == "All Classes":
     Controller = ClassController()
     result = Controller.GetAllClasses()
