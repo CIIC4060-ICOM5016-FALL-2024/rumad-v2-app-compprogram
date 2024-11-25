@@ -13,7 +13,16 @@ class ClassDAO:
         result = self.cursor.fetchall()
         return result
     
-
+    #Method in order to populate syllabuys by courseid. 
+    def GetCIDbyNameAndCode(self, cname, ccode):
+        query = "SELECT cid FROM CLASS WHERE cname = %s AND ccode = %s;"
+        self.cursor.execute(query,(cname, ccode,))
+        result = self.cursor.fetchone()
+        if result is None:
+            print(f"No record found for Class: {cname, ccode}")
+            return {"error": f"No CID found for Class: {cname, ccode}"}, 404
+        return result 
+    
     def GetClassByCID(self,cid):#CID
         query = "SELECT cid,cname,ccode,cdesc,term,years,cred,csyllabus FROM CLASS WHERE cid = %s;"
         self.cursor.execute(query,(cid,))
