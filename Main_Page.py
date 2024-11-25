@@ -1,13 +1,13 @@
 from main import *
 import pandas as pd
 
+st.title("Welcome to the New Putty")
 
 page = st.selectbox("Choose a page", ["Home", "All Classes", "All Rooms","All Sections","All Meetings","All Requisites"])
 st.session_state.page = page
 
 if st.session_state.page == "Home":
     # Render home page content
-    st.header("Welcome to the New Putty")
     st.write("In the side bar, you can see all the different options for all the local and Global Statistics")
     st.write("Also, in the current Drop Down list you can verify all the information of all the tables")
 elif st.session_state.page == "All Classes":

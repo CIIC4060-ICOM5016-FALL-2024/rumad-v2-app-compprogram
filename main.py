@@ -4,7 +4,6 @@ from flask import Flask,render_template,jsonify,request
 import streamlit as st
 from pages import *
 #------------CONTROLLERS----------------------------------------------------
-
 from Controllers.ClassController import ClassController
 from Controllers.SectionController import SectionController
 from Controllers.MeetingController import MeetingController

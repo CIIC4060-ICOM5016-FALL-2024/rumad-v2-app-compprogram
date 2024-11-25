@@ -1,8 +1,9 @@
+# streamlit_app: Page Title Here
+
 from Controllers.LeastClassTaughtController import LeastClassTaughtController
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
 
 st.title("Top 3 classes that were offered the least")
 
