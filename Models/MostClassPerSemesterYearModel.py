@@ -22,6 +22,13 @@ class MostClassPerSemesterYearDAO:
         return result
     
     
+    def GET_Years(self):
+        query = """select distinct years from section
+                   order by years;"""
+        self.cursor.execute(query)
+        data = self.cursor.fetchall()
+        return data
+
     def Make_Dictionary(self,data):
         result = {}
         result["Class Name"] = data[0]

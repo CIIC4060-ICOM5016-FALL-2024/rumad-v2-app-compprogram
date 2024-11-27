@@ -13,7 +13,7 @@ else:
 
     try:
         semester = st.selectbox("Choose a Semester",["V1","V2","Spring","Fall"])
-        betweenYears = list(range(2017,2026))
+        betweenYears = MostClassPerSemesterYearController.Get_Years()
         year = str(st.selectbox("Pick a year", betweenYears))
         int(year)#Just coroborate that is a number
 
