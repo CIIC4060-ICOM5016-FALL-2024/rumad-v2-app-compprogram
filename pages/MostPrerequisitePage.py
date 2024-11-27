@@ -4,22 +4,27 @@ import pandas as pd
 import plotly.express as px
 
 
-st.title("Top 3 classes that appears the most as prerequisite to other classes")
+if(st.session_state.login_in == False):
+    st.write("Go back to the Main page and logged in, if you want to see the data")
+
+else:
+
+    st.title("Top 3 classes that appears the most as prerequisite to other classes")
 
 
-Controller = MostPrerequisiteController()
-result = Controller.GET_TOP_PREREQUISITE()
+    Controller = MostPrerequisiteController()
+    result = Controller.GET_TOP_PREREQUISITE()
 
 
-# Create DataFrame
-data = pd.DataFrame(
-    {
-        "Total": [int(r["total"]) for r
-                  in result],
-    },
-    index=[f"Reqid: {r['requid']}, {r['cdesc']}" for r in result]
-)
+    # Create DataFrame
+    data = pd.DataFrame(
+        {
+            "Total": [int(r["total"]) for r
+                    in result],
+        },
+        index=[f"Reqid: {r['requid']}, {r['cdesc']}" for r in result]
+    )
 
 
-fig = px.bar(data, y="Total")
-st.plotly_chart(fig)
+    fig = px.bar(data, y="Total")
+    st.plotly_chart(fig)

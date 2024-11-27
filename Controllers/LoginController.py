@@ -9,7 +9,11 @@ class LoginController:
     def Verification(self,username,password):
         data = self.DAO.Verification(username,password)
         if(data is None):
-            return False
+            return 201
         else:
-            return True
+            return 200
 
+
+    def CreateAccount(self,username,password):
+        data = self.DAO.CreateAccount(username,password)
+        return data

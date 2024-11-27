@@ -15,6 +15,16 @@ class LoginDao:
         result = self.cursor.fetchone()
         return result
     
+    def CreateAccount(self,username,password):
+        try:
+            query = "INSERT INTO Login(username,password) VALUES(%s,%s)"
+            self.cursor.execute(query,(username,password,))
+            self.connection.commit()
+            return 201
+        except:
+            return 200
+        
+    
     
     def Make_Dictionary(self,data):
         result = {}
