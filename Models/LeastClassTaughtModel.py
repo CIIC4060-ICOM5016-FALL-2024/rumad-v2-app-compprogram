@@ -14,7 +14,7 @@ class LeastClassTaughtDao:
         ON section.cid = class.cid
         WHERE cdesc <> 'None'
         GROUP BY class.cid, class.cname,class.ccode
-        ORDER BY class_count asc
+        ORDER BY class_count desc
         LIMIT 3"""
         self.cursor.execute(query)
         result = self.cursor.fetchall()

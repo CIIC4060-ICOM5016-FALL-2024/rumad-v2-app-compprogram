@@ -12,15 +12,15 @@ else:
 
 
     try:
-        rid = int(st.text_input("Insert CID"))
+        rid = st.text_input("Insert CID")
 
         Controller = MostClassPerRoomController()
-        result = Controller.GET_Most_Class_Per_Room(rid)
         isClicked = st.button("Send data") or rid
 
 
         if isClicked:
             # Create DataFrame
+            result = Controller.GET_Most_Class_Per_Room(int(rid))
             data = pd.DataFrame(
                 {
                     "Students": [r["students"] for r in result],
