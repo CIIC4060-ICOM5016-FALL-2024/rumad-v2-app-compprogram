@@ -18,6 +18,6 @@ class MostClassPerSemesterYearController:
         data = self.Course.GET_Years()
         years_list = []
         for years in data:
-            years_list.append(years)
+            years_list.append(years[0])
         return years_list
             
