@@ -21,7 +21,7 @@ class SyllabusDAO:
         query = "insert into syllabus( courseid, embedding_text, chunk) values (%s, %s, %s) returning chunkid"
         cursor.execute(query, (courseid, embedding_text, chunk))
         chunkid = cursor.fetchone()[0]
-        self.conn.commit()
+        self.connection.commit()
         return chunkid
 
     def getFragments(self,emb):

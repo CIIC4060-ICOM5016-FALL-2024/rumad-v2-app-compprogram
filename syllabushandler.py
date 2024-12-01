@@ -69,7 +69,10 @@ for f in files:
 
     for t in token_split_texts:
         emb = model.encode(t)
-        
+        # current_length = len(emb)
+        # remaining_length = 1000-current_length
+        # for i in range(0,remaining_length):
+        #     emb = np.append()
 
         #print(t)
         #print(emb)
