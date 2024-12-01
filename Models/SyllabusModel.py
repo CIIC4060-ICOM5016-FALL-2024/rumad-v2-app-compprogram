@@ -3,6 +3,7 @@ from config import *
 
 
 class SyllabusDAO:
+
     def __init__(self):
         self.connection = psycopg2.connect(**db_params)#Connecting to the database;
         self.cursor = self.connection.cursor()
@@ -13,7 +14,26 @@ class SyllabusDAO:
         result = self.cursor.fetchall()
         return result
 
+    #PHASE III Syllabus filling-----------------------
 
+    def insertFragment(self, courseid, embedding_text, chunk):
+        cursor = self.connection.cursor()
+        query = "insert into syllabus( courseid, embedding_text, chunk) values (%s, %s, %s) returning chunkid"
+        cursor.execute(query, (courseid, embedding_text, chunk))
+        chunkid = cursor.fetchone()[0]
+        self.conn.commit()
+        return chunkid
+
+    def getFragments(self,emb):
+        cursor = self.connection.cursor()
+        query = "select did, fid, embedding <=> %s as distance, content from fragments order by distance limit 30"
+        cursor.execute(query, (emb,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
+    #-------------------------------------------------
 
     def GetSyllabusByCHUNKID(self,chunkid):#CHUNKID
         query = "SELECT chunkid,courseid, embedding_text, chunk FROM Syllabus WHERE chunkid = %s;"

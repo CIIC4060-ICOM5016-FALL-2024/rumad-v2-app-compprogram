@@ -3,7 +3,7 @@ import re
 from os import listdir
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
 from Models.ClassModel import ClassDAO
-from Models.SyllabusDocDao import SyllabusDocDAO
+from Models.SyllabusModel import SyllabusDAO
 
 from sentence_transformers import SentenceTransformer
 
@@ -16,11 +16,20 @@ print(files)
 #extract chunks
 
 classDAO = ClassDAO()
-SyllabusDAO = SyllabusDocDAO()
+SyllabusDAO = SyllabusDAO()
 
 for f in files:
     fname = "rumad-v2-app-compprogram//syllabuses//" + f
     print(f)
+    #parsing file -----------------------------------------
+    string_to_parse = f
+    course_name = re.split(r"[-.]", string_to_parse) #tokenizes it so that we can know the name and desc
+    course_name.pop() #so that .pdf is not there, although it's not needed 
+
+    #You get this from the current file name
+    cname = course_name[0]
+    ccode = course_name[1]
+
     reader = PdfReader(fname)
     pdf_texts = [p.extract_text().strip() for p in reader.pages]
 
@@ -54,15 +63,17 @@ for f in files:
     print(f"\nTotal Splitted chunks: {len(token_split_texts)}")
     #exit(1)
 
-    # insert document into table
-    cid = classDAO.GetCIDbyNameAndCode()
+    # get the course that the syllabus is about 
+    cid = classDAO.GetCIDbyNameAndCode(cname, ccode)
 
 
     for t in token_split_texts:
         emb = model.encode(t)
+        
+
         #print(t)
         #print(emb)
-        fraDAO.insertFragment(did, t, emb.tolist())
+        SyllabusDAO.insertFragment(cid, emb.tolist(), t)
 
     print("Done file: " + f)
 
