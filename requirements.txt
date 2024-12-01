@@ -5,3 +5,7 @@ numpy
 psycopg2
 requests
 datetime
+sentence-transformers
+langchain
+langchain-text-splitters
+pypdf
