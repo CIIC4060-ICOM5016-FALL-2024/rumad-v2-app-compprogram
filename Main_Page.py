@@ -17,16 +17,20 @@ if st.session_state.login_in == False:
     # User inputs
     username = st.text_input("Enter username")
     password = st.text_input("Enter password", type="password")
+    isClickedCreateAccount = st.button("Create Account")
+    isClickedLogin = st.button("Login")
+
+
 
     # Button to trigger login
-    if(st.button("Create Accout")):
+    if(isClickedCreateAccount and username and password):
         Controller = LoginController()
         CreateAccount = Controller.CreateAccount(username,password)
         if(CreateAccount == 201):
             st.write("Created succesfully")
         else:
             st.write("Try another username")
-    if st.button("Login"):
+    elif isClickedLogin:
         if username and password:  # Check if inputs are filled
             Controller = LoginController()
             Allowed = Controller.Verification(username, password)
@@ -41,10 +45,8 @@ if st.session_state.login_in == False:
             except:
                 st.error(f"Failed to fetch data with username: {username} and password: {password}")
                 st.session_state.login_in = False
-        elif(username):
-            st.error("Write a password")
-        else:
-            st.error("Write a username")
+    elif((username and (not password) ) or (password and not(username))):
+        st.error("You need to write both, username and password")
 
 
 # --------------------------------------------------------------------------------------------------------------------------------
