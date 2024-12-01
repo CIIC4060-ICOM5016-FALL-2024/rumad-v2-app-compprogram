@@ -14,4 +14,10 @@ class MostClassPerSemesterYearController:
             return result
         except:
             return {"error":f"Not a valid input: {years},{semester}"}
+    def Get_Years(self):
+        data = self.Course.GET_Years()
+        years_list = []
+        for years in data:
+            years_list.append(years[0])
+        return years_list
             
