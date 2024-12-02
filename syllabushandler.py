@@ -10,16 +10,33 @@ from sentence_transformers import SentenceTransformer
 #model = SentenceTransformer("all-MiniLM-L6-v2")
 model = SentenceTransformer("all-mpnet-base-v2")
 
-files = listdir("rumad-v2-app-compprogram//syllabuses")
+files = listdir("rumad-v2-app-compprogram//syllabustest")
 print(files)
 
 #extract chunks
 
+def remove_headers_from_pdf(file_path, header_pattern):
+    reader = PdfReader(file_path)
+    content = []
+    for page in reader.pages:
+        text = page.extract_text().strip()
+        # Remove header using regex
+        cleaned_text = re.sub(header_pattern, '', text, flags=re.IGNORECASE)
+        content.append(cleaned_text.strip())
+    return content
+
 classDAO = ClassDAO()
 SyllabusDAO = SyllabusDAO()
+headerPattern = (
+    r"University of Puerto Rico\s*-?\s*Mayagüez Campus\s*"
+    r"College of Engineering\s*"
+    r"Department of Computer Science and Engineering\s*"
+    r"(Program in Software Engineering\s*|Program in Computer Science and Engineering\s*)?"
+)
+
 
 for f in files:
-    fname = "rumad-v2-app-compprogram//syllabuses//" + f
+    fname = "rumad-v2-app-compprogram//syllabustest//" + f
     print(f)
     #parsing file -----------------------------------------
     string_to_parse = f
@@ -30,19 +47,25 @@ for f in files:
     cname = course_name[0]
     ccode = course_name[1]
 
-    reader = PdfReader(fname)
-    pdf_texts = [p.extract_text().strip() for p in reader.pages]
+    #--------------------------------------------------------
+    
+
+    
+
+    pdf_texts = remove_headers_from_pdf(fname, headerPattern)
 
     # Filter the empty strings
     pdf_texts = [text for text in pdf_texts if text]
+
+    
 
     print(pdf_texts[0])
 
     #split
     character_splitter = RecursiveCharacterTextSplitter(
         separators=["\n\n", "\n", ". ", " ", ""],
-        chunk_size=100,
-        chunk_overlap=50
+        chunk_size=600,
+        chunk_overlap=240
     )
     character_split_texts = character_splitter.split_text('\n\n'.join(pdf_texts))
 
@@ -61,7 +84,8 @@ for f in files:
     print(token_split_texts[10])
     [print(t) for t in token_split_texts]
     print(f"\nTotal Splitted chunks: {len(token_split_texts)}")
-    #exit(1)
+    
+    # exit(1)
 
     # get the course that the syllabus is about 
     cid = classDAO.GetCIDbyNameAndCode(cname, ccode)
@@ -77,7 +101,7 @@ for f in files:
         #print(t)
         #print(emb)
         SyllabusDAO.insertFragment(cid, emb.tolist(), t)
-
     print("Done file: " + f)
+   
 
 

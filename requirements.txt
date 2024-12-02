@@ -9,3 +9,5 @@ sentence-transformers
 langchain
 langchain-text-splitters
 pypdf
+streamlit
+plotly_express
