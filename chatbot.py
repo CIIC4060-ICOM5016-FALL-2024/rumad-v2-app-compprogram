@@ -12,13 +12,13 @@ def get_context(user_query):
   dao = SyllabusDAO()
   context = []
 
-  emb = model.encode(user_query)
+  emb = model.encode(user_query, normalize_embeddings=True)
   chunks = dao.getFragments(str(emb.tolist()))
   for f in chunks:
-    # print(f)
     context.append(f[3])
   
   documents = "\\n".join(c for c in context)
+  # print(f"This is the retrieved doc: {documents}")
   return documents
 
 
@@ -37,14 +37,17 @@ def configure_page():
 
 def get_response(query, chat_history, documents):
   template = """You are an assistant for question-answering tasks.
-    Use the following documents to answer the question, and read any [UNK] token as a newline, double check your work.
+    Use the following documents to answer the question, which are exerpts from the syllabus. Read through it carefully
+    and use any reference that it could be related to answer the query.
     If you don't know the answer, just say that you don't know.
-    Use five sentences maximum and keep the answer concise:
+    Answer with five sentences maximum or less and be concise:
 
-    Documents: {documents}
+    Documents: {documents} 
     Chat History (Use Only if Necessary): {chat_history}
     User question: {user_question}
     """
+  
+  
   
   prompt = ChatPromptTemplate.from_template(template)
   llm = ChatOllama(model="llama3.1:8b", temperature=0.3,)

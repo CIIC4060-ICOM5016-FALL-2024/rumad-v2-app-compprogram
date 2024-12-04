@@ -26,7 +26,7 @@ class ClassDAO:
     def GetClassByCID(self,cid):#CID
         query = "SELECT cid,cname,ccode,cdesc,term,years,cred,csyllabus FROM CLASS WHERE cid = %s;"
         self.cursor.execute(query,(cid,))
-        result = self.cursor.fetchone()
+        result = self.cursor.fetchone()   
         if result is None:
             print(f"No record found for CID: {cid}")  # Debug: Log missing record
             return {"error": f"No class found with CID {cid}"}, 404

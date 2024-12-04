@@ -26,7 +26,7 @@ class SyllabusDAO:
 
     def getFragments(self,emb):
         cursor = self.connection.cursor()
-        query = "select courseid, chunkid, embedding_text <=> %s as distance, chunk from syllabus order by distance Desc limit 30"
+        query = "select courseid, chunkid, embedding_text <=> %s as distance, chunk from syllabus order by distance ASC limit 30"
         cursor.execute(query, (emb,))
         result = []
         for row in cursor:
