@@ -10,45 +10,50 @@ if "login_in" not in st.session_state:
 
 
 # App title and header
-st.title("Welcome to the new Putty!")
-if st.session_state.login_in == False:
-    st.header("Before you continue, please make sure you have an account")
 
-    # User inputs
-    username = st.text_input("Enter username")
-    password = st.text_input("Enter password", type="password")
+if(st.session_state.login_in == False):
+    st.title("Welcome to the new Putty!")
+    if st.session_state.login_in == False:
+        st.header("Before you continue, please make sure you have an account")
 
-    # Button to trigger login
-    if(st.button("Create Accout")):
-        Controller = LoginController()
-        CreateAccount = Controller.CreateAccount(username,password)
-        if(CreateAccount == 201):
-            st.write("Created succesfully")
-        else:
-            st.write("Try another username")
-    if st.button("Login"):
-        if username and password:  # Check if inputs are filled
+        # User inputs
+        username = st.text_input("Enter username")
+        password = st.text_input("Enter password", type="password")
+
+        # Button to trigger login
+        if(st.button("Create Accout")):
             Controller = LoginController()
-            Allowed = Controller.Verification(username, password)
-            try:
-                # Make API request after successful verification
-                response = Allowed
-                if response == 200:
-                    st.success("Login successful!")
-                    st.session_state.login_in = True
-                else:
-                    raise # this error is to force the except
-            except:
-                st.error(f"Failed to fetch data with username: {username} and password: {password}")
-                st.session_state.login_in = False
-        elif(username):
-            st.error("Write a password")
-        else:
-            st.error("Write a username")
+            CreateAccount = Controller.CreateAccount(username,password)
+            if(CreateAccount == 201):
+                st.write("Created succesfully")
+            else:
+                st.write("Try another username")
+        if st.button("Login"):
+            if username and password:  # Check if inputs are filled
+                Controller = LoginController()
+                Allowed = Controller.Verification(username, password)
+                try:
+                    # Make API request after successful verification
+                    response = Allowed
+                    if response == 200:
+                        st.success("Login successful!")
+                        st.session_state.login_in = True    
+                    else:
+                        raise # this error is to force the except
+                except:
+                    st.error(f"Failed to fetch data with username: {username} and password: {password}")
+                    st.session_state.login_in = False
+            elif(username):
+                st.error("Write a password")
+            else:
+                st.error("Write a username")
 
+    if (st.session_state.login_in == True):
+        st.rerun()
 
 # --------------------------------------------------------------------------------------------------------------------------------
 if(st.session_state.login_in == True):
+    st.title("Welcome to the new Putty!")
     page = st.selectbox("Choose a page", ["Home", "All Classes", "All Rooms","All Sections","All Meetings","All Requisites"])
     st.session_state.page = page
 

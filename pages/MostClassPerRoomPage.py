@@ -4,7 +4,10 @@ import plotly.express as px
 import pandas as pd
 
 if(st.session_state.login_in == False):
-    st.write("Go back to the Main page and logged in, if you want to see the data")
+    st.write("Please log in to see the data")
+
+    if(st.button("Log in")):
+        st.switch_page("Main_page.py")
 
 else:
 
