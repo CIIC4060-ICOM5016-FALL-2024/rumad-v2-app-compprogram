@@ -11,7 +11,7 @@ from sentence_transformers import SentenceTransformer
 #model = SentenceTransformer("all-MiniLM-L6-v2")
 model = SentenceTransformer("all-mpnet-base-v2")
 
-files = listdir("rumad-v2-app-compprogram//syllabuses")
+files = listdir(r"rumad-v2-app-compprogram/syllabuses")
 print(files)
 
 #extract chunks
@@ -23,8 +23,8 @@ def remove_headers_from_pdf(file_path, patterns):
         text = page.get_text()
         # Remove header using regex
         cleaned_text = re.sub(patterns[0], '', text, flags=re.IGNORECASE)
-        cleaned_text = re.sub(patterns[1], '', cleaned_text, flags=re.IGNORECASE)
-        cleaned_text = re.sub(patterns[2], '', cleaned_text, flags=re.IGNORECASE)
+        cleaned_text = re.sub(patterns[1], '', cleaned_text, flags=re.DOTALL)
+        cleaned_text = re.sub(patterns[2], '', cleaned_text, flags=re.DOTALL)
         content.append(cleaned_text.strip())
     return content
 
@@ -40,22 +40,10 @@ headerPattern = (
     r"(Program in Software Engineering\s*|Program in Computer Science and Engineering\s*)?"
 )
 Law51Pattern =(
-    r"|12\. According to Law 51\s*"
-    r"Students will identify themselves with the Institution and the instructor of the course for purposes of\s*"
-    r"assessment \(exams\) accommodations\. For more information please call the Student with Disabilities Office\s*"
-    r"which is part of the Dean of Students office \(Office #4\)  at  \(787\)265-3862 or \(787\)832-4040 extensions\s*"
-    r"3250 or 3258\.\s*"
+    r"12. According to Law 51.*"
 )
 AcademicIntegrityPattern = (
-    r"|13\. Academic Integrity\s*-The University of Puerto Rico promotes the highest standards of academic and scientific integrity\. Article\s*"
-    r"6\.2 of the UPR Students General Bylaws \(Board of Trustees Certification 13, 2009-2010\) states that\s*"
-    r"academic dishonesty includes, but is not limited to: fraudulent actions; obtaining grades or academic\s*"
-    r"degrees by false or fraudulent simulations; copying the whole or part of the academic work of another\s*"
-    r"person; plagiarizing totally or partially the work of another person; copying all or part of another person\s*"
-    r"answers to the questions of an oral or written exam by taking or getting someone else to take the exam on\s*"
-    r"his/her behalf; as well as enabling and facilitating another person to perform the aforementioned\s*"
-    r"behavior\. ​Any of these behaviors will be subject to disciplinary action in accordance with the disciplinary\s*"
-    r"procedure laid down in the ​UPR Students General Bylaws\.\s*"
+    r"(Law 51|Article\s*6\.2|-The University of Puerto Rico promotes the highest standards of academic and scientific integrity|[Pp]age\s*4\s*of\s*4).*"
 )
 
 
@@ -90,8 +78,8 @@ for f in files:
     #split
     character_splitter = RecursiveCharacterTextSplitter(
         separators=["\n\n", "\n", ". ", " ", ""],
-        chunk_size=750,
-        chunk_overlap=185)
+        chunk_size=600,
+        chunk_overlap=300)
     character_split_texts = character_splitter.split_text('\n\n'.join(pdf_texts))
 
     print(character_split_texts[5])
@@ -100,7 +88,7 @@ for f in files:
     [print(t) for t in character_split_texts]
     print()
     #Token
-    token_splitter = SentenceTransformersTokenTextSplitter(chunk_overlap=50, tokens_per_chunk=200)
+    token_splitter = SentenceTransformersTokenTextSplitter(chunk_overlap=50, tokens_per_chunk=256)
 
     token_split_texts = []
     for text in character_split_texts:

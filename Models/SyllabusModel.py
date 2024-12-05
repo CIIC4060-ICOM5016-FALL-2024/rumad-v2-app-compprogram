@@ -20,19 +20,30 @@ class SyllabusDAO:
         cursor = self.connection.cursor()
         query = "insert into syllabus(courseid, embedding_text, chunk) values (%s, %s, %s) returning chunkid"
         cursor.execute(query, (courseid, embedding_text, chunk))
-        chunkid = cursor.fetchone()[0]
         self.connection.commit()
+        chunkid = cursor.fetchone()[0]
         return chunkid
-
-    def getFragments(self,emb):
+    
+    def getFragments(self, emb):
         cursor = self.connection.cursor()
-        query = "select courseid, chunkid, embedding_text <=> %s as distance, chunk from syllabus order by distance ASC limit 30"
+        query = "select courseid, chunkid, embedding_text <=> %s as distance, chunk from syllabus order by distance limit 30"
         cursor.execute(query, (emb,))
         result = []
         for row in cursor:
             result.append(row)
             
-        print(f"This is the retrieved doc: {result}")
+        # print(f"This is the retrieved doc: {result}")
+        return result
+
+    def getFragmentsByCID(self,emb, cid):
+        cursor = self.connection.cursor()
+        query = "select courseid, chunkid, embedding_text <=> %s as distance, chunk from syllabus WHERE cid = %s order by distance limit 30"
+        cursor.execute(query, (emb, cid))
+        result = []
+        for row in cursor:
+            result.append(row)
+            
+        # print(f"This is the retrieved doc: {result}")
         return result
     
     #-------------------------------------------------
