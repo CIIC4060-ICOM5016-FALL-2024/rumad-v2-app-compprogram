@@ -13,6 +13,8 @@ from sentence_transformers import SentenceTransformer
 #model = SentenceTransformer("all-MiniLM-L6-v2")
 model = SentenceTransformer("all-mpnet-base-v2")
 
+
+#If your root folder is rumadv2, just put in syllabuses
 files = listdir(r"rumad-v2-app-compprogram/syllabuses")
 print(files)
 
@@ -64,7 +66,7 @@ def remove_pattern_from_pdf(file_path):
     return content
 
 
-
+ 
 
 classDAO = ClassDAO()
 SyllabusDAO = SyllabusDAO()
@@ -72,7 +74,7 @@ SyllabusDAO = SyllabusDAO()
 
 for f in files:
     # this variables also was changed
-    fname = "syllabuses//" + f
+    fname = r"rumad-v2-app-compprogram/syllabuses/" + f
     print(f)
     #parsing file -----------------------------------------
     string_to_parse = f

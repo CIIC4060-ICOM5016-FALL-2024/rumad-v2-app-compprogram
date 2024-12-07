@@ -37,13 +37,13 @@ class SyllabusDAO:
 
     def getFragmentsByCID(self,emb, cid):
         cursor = self.connection.cursor()
-        query = "select courseid, chunkid, embedding_text <=> %s as distance, chunk from syllabus WHERE cid = %s order by distance limit 30"
+        query = "select courseid, chunkid, embedding_text <=> %s as distance, chunk from syllabus WHERE courseid = %s order by distance limit 30"
         cursor.execute(query, (emb, cid))
         result = []
         for row in cursor:
             result.append(row)
             
-        # print(f"This is the retrieved doc: {result}")
+        print(f"This is the retrieved doc: {result}")
         return result
     
     #-------------------------------------------------
