@@ -2,6 +2,8 @@ from Controllers.MeetingMostSectionController import MeetingMostSectionControlle
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from sidebar import make_sidebar
+make_sidebar()
 
 if(st.session_state.login_in == False):
     st.write("Please log in to see the data")

@@ -3,11 +3,13 @@ import pandas as pd
 import streamlit as st
 from Controllers.LoginController import LoginController
 import requests as rq
+from sidebar import make_sidebar
 
 
 if "login_in" not in st.session_state:
     st.session_state.login_in = False
 
+make_sidebar()
 
 # App title and header
 

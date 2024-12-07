@@ -3,6 +3,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import HumanMessage, AIMessage
+from sidebar import make_sidebar
 
 # Streamlit UI Setup
 
@@ -60,6 +61,7 @@ def display_messages():
     st.session_state.messages.append(AIMessage(ai_response))
 
 configure_page() 
+make_sidebar()
 
 if(st.session_state.login_in == False):
     st.write("Please log in to use the Chat Bot")

@@ -2,7 +2,8 @@ from Controllers.MostCapacityRoomsController import MostCapacityRoomsController
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-
+from sidebar import make_sidebar
+make_sidebar()
 
 if(st.session_state.login_in == False):
     st.write("Please log in to see the data")
