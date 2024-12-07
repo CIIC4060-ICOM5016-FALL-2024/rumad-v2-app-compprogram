@@ -1,5 +1,6 @@
 import streamlit as st
 import spacy 
+from spacy.matcher import Matcher
 from langchain_ollama import ChatOllama
 from sentence_transformers import SentenceTransformer
 from Models.SyllabusModel import SyllabusDAO
@@ -14,10 +15,14 @@ def extract_tags(query):
     # Process the query
     nlp = spacy.load("en_core_web_sm")
     query = query.upper()
+    matcher = Matcher(nlp.vocab)
+
     doc = nlp(query)
 
     # Extract tags based on named entities, keywords, and POS
     # ent stands for entity. 
+    for token in doc:
+      print(f"THE LABEL PER TEXT: {token.text}")
     tags = {
         "course_codes": [ent.text for ent in doc.ents if ent.text.startswith("CIIC")],
         "topics": [chunk.text for chunk in doc.noun_chunks],
