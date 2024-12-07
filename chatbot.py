@@ -50,7 +50,7 @@ def get_response(query, chat_history, documents):
   
   
   prompt = ChatPromptTemplate.from_template(template)
-  llm = ChatOllama(model="llama3.1:8b", temperature=0.3,)
+  llm = ChatOllama(model="llama3.1:8b", temperature=0,)
   chain = prompt | llm |  StrOutputParser()
   return chain.stream({
     "chat_history": chat_history,

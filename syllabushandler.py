@@ -5,26 +5,62 @@ from os import listdir
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
 from Models.ClassModel import ClassDAO
 from Models.SyllabusModel import SyllabusDAO
+import torch.nn.functional as F
+
 
 from sentence_transformers import SentenceTransformer
 
 #model = SentenceTransformer("all-MiniLM-L6-v2")
 model = SentenceTransformer("all-mpnet-base-v2")
 
-files = listdir("rumad-v2-app-compprogram//syllabuses")
+# this variable was changed to copy relativepath 
+files = listdir("syllabuses")
 print(files)
 
 #extract chunks
 
-def remove_headers_from_pdf(file_path, patterns):
+unwanted_data = [
+    r"12\.\s*a.*",
+    r"13\.\s* Academic[\s\S]*Integrity[\s\S]*?(?=UPR Students General Bylaws)",
+    r"the\s*university\s*+of\s*puerto\s*rico\s*promotes[\s\S]*?(?=UPR Students General Bylaws)"
+    r"According\s*to\s*Law\s*51.*?(?=\n13.)",
+    r"University\s*of\s*Puerto\s*Rico\s*-\s*Mayagüez[\s\S]*?(?=\nCIIC|INSO|Course)",
+]
+
+
+def normalize_text(text):
+    """
+    Normalize the document text by removing unwanted characters, replacing non-standard spaces,
+    and normalizing whitespace.
+    """
+    # Replace non-breaking spaces and tabs with standard spaces
+    text = text.replace("\u00A0", " ").replace("\t", " ")
+    
+
+    # Remove unwanted non-ASCII characters while keeping Spanish characters
+    # Keep Latin-1 Supplement and Latin Extended-A ranges (includes Spanish special characters)
+    text = re.sub(r"[^\w\sáéíóúüñÁÉÍÓÚÜÑ.,!?¿¡-]", "", text)
+    
+    # Collapse multiple spaces into a single space
+    text = re.sub(r"\s+", " ", text)
+    
+    # Trim leading and trailing whitespace
+    return text.strip()
+
+
+def remove_unwanted_data(text):
+    text = normalize_text(text)
+    for pattern in unwanted_data:
+        text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+    return text
+
+
+def remove_pattern_from_pdf(file_path):
     doc = fitz.open(file_path)
     content = []
     for page in doc:
         text = page.get_text()
-        # Remove header using regex
-        cleaned_text = re.sub(patterns[0], '', text, flags=re.IGNORECASE)
-        cleaned_text = re.sub(patterns[1], '', cleaned_text, flags=re.IGNORECASE)
-        cleaned_text = re.sub(patterns[2], '', cleaned_text, flags=re.IGNORECASE)
+        cleaned_text = remove_unwanted_data(text)
         content.append(cleaned_text.strip())
     return content
 
@@ -33,34 +69,11 @@ def remove_headers_from_pdf(file_path, patterns):
 
 classDAO = ClassDAO()
 SyllabusDAO = SyllabusDAO()
-headerPattern = (
-    r"University of Puerto Rico\s*-?\s*Mayagüez Campus\s*"
-    r"College of Engineering\s*"
-    r"Department of Computer Science and Engineering\s*"
-    r"(Program in Software Engineering\s*|Program in Computer Science and Engineering\s*)?"
-)
-Law51Pattern =(
-    r"|12\. According to Law 51\s*"
-    r"Students will identify themselves with the Institution and the instructor of the course for purposes of\s*"
-    r"assessment \(exams\) accommodations\. For more information please call the Student with Disabilities Office\s*"
-    r"which is part of the Dean of Students office \(Office #4\)  at  \(787\)265-3862 or \(787\)832-4040 extensions\s*"
-    r"3250 or 3258\.\s*"
-)
-AcademicIntegrityPattern = (
-    r"|13\. Academic Integrity\s*-The University of Puerto Rico promotes the highest standards of academic and scientific integrity\. Article\s*"
-    r"6\.2 of the UPR Students General Bylaws \(Board of Trustees Certification 13, 2009-2010\) states that\s*"
-    r"academic dishonesty includes, but is not limited to: fraudulent actions; obtaining grades or academic\s*"
-    r"degrees by false or fraudulent simulations; copying the whole or part of the academic work of another\s*"
-    r"person; plagiarizing totally or partially the work of another person; copying all or part of another person\s*"
-    r"answers to the questions of an oral or written exam by taking or getting someone else to take the exam on\s*"
-    r"his/her behalf; as well as enabling and facilitating another person to perform the aforementioned\s*"
-    r"behavior\. ​Any of these behaviors will be subject to disciplinary action in accordance with the disciplinary\s*"
-    r"procedure laid down in the ​UPR Students General Bylaws\.\s*"
-)
 
 
 for f in files:
-    fname = "rumad-v2-app-compprogram//syllabuses//" + f
+    # this variables also was changed
+    fname = "syllabuses//" + f
     print(f)
     #parsing file -----------------------------------------
     string_to_parse = f
@@ -74,11 +87,8 @@ for f in files:
     #--------------------------------------------------------
     
 
-    
-    patterns = [headerPattern, Law51Pattern, AcademicIntegrityPattern]
-    pdf_texts = remove_headers_from_pdf(fname, patterns)
-    # pdf_texts = remove_headers_from_pdf(fname, patterns[1])
-    # pdf_texts = remove_headers_from_pdf(fname, patterns[2])
+
+    pdf_texts = remove_pattern_from_pdf(fname)
     print(pdf_texts)
     # Filter the empty strings
     pdf_texts = [text for text in pdf_texts if text]
@@ -90,23 +100,23 @@ for f in files:
     #split
     character_splitter = RecursiveCharacterTextSplitter(
         separators=["\n\n", "\n", ". ", " ", ""],
-        chunk_size=750,
-        chunk_overlap=185)
+        chunk_size=250,
+        chunk_overlap=125)
     character_split_texts = character_splitter.split_text('\n\n'.join(pdf_texts))
 
-    print(character_split_texts[5])
+    # print(character_split_texts[5])
     print(f"\nTotal chunks: {len(character_split_texts)}")
 
     [print(t) for t in character_split_texts]
     print()
     #Token
-    token_splitter = SentenceTransformersTokenTextSplitter(chunk_overlap=50, tokens_per_chunk=200)
+    token_splitter = SentenceTransformersTokenTextSplitter(chunk_overlap=50, tokens_per_chunk=256)
 
     token_split_texts = []
     for text in character_split_texts:
         token_split_texts += token_splitter.split_text(text)
     print("token")
-    print(token_split_texts[5])
+    # print(token_split_texts[5])
     [print(t) for t in token_split_texts]
     print(f"\nTotal Splitted chunks: {len(token_split_texts)}") 
     
@@ -118,15 +128,7 @@ for f in files:
 
     for t in token_split_texts:
         emb = model.encode(t, normalize_embeddings=True)
-        # current_length = len(emb)
-        # remaining_length = 1000-current_length
-        # for i in range(0,remaining_length):
-        #     emb = np.append()
-
-        #print(t)
-        #print(emb)
+        print(t)
         SyllabusDAO.insertFragment(cid, emb.tolist(), t)
     print("Done file: " + f)
    
-
-
