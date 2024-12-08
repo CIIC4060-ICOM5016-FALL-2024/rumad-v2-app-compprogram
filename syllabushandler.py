@@ -40,10 +40,11 @@ def normalize_text(text):
 
     # Remove unwanted non-ASCII characters while keeping Spanish characters
     # Keep Latin-1 Supplement and Latin Extended-A ranges (includes Spanish special characters)
-    text = re.sub(r"[^\w\sáéíóúüñÁÉÍÓÚÜÑ.,!?¿¡-]", "", text)
+    text = re.sub(r"[^\w\sáéíóúüñÁÉÍÓÚÜÑ.,%!?¿¡-]", "", text)
+    # text = re.sub(r"^(☒|☐)\s*.+\s+\d+%$", ",", text)
     
     # Collapse multiple spaces into a single space
-    text = re.sub(r"\s+", " ", text)
+    # text = re.sub(r"\s+", " ", text)
     
     # Trim leading and trailing whitespace
     return text.strip()
@@ -101,8 +102,8 @@ for f in files:
     #split
     character_splitter = RecursiveCharacterTextSplitter(
         separators=["\n\n", "\n", ". ", " ", ""],
-        chunk_size=250,
-        chunk_overlap=125)
+        chunk_size=300,
+        chunk_overlap=150)
     character_split_texts = character_splitter.split_text('\n\n'.join(pdf_texts))
 
     # print(character_split_texts[5])

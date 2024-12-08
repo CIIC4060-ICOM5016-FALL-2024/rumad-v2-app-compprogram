@@ -1,7 +1,8 @@
 import streamlit as st
 import spacy
-from spacy.matcher import Matcher
 import re
+from sentence_transformers.util import normalize_embeddings
+from spacy.matcher import Matcher
 from langchain_ollama import ChatOllama
 from sentence_transformers import SentenceTransformer
 from Models.SyllabusModel import SyllabusDAO
@@ -16,7 +17,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 def extract_tags(query):
     # Process the query
     nlp = spacy.load("en_core_web_sm")
-    matcher = Matcher(nlp.vocab)
+    matcher = Matcher(nlp.vocab) #Initialize matcher
     patterns = [[{"POS": "PROPN", "LENGTH": 4}, {"DEP": "nummod", "LENGTH": 4}]] #Each ccode is length 4, and a numeric modifier of length 4
     matcher.add("COURSEID", patterns)
 
@@ -36,7 +37,7 @@ def extract_tags(query):
         "topics": [chunk.text for chunk in doc.noun_chunks],
         "keywords": [token.text for token in doc if token.is_alpha and not token.is_stop]
     }
-    # print(tags["course_codes"])
+    print(tags)
     return tags
 
 
@@ -50,6 +51,7 @@ def get_context(user_query):
   model = SentenceTransformer("all-mpnet-base-v2")
 
   strings_to_parse = tags["course_codes"]
+  cid = 0
 
   if strings_to_parse:
     course_name = re.split(" ", strings_to_parse[0]) #tokenizes it so that we can know the name 
@@ -66,6 +68,7 @@ def get_context(user_query):
   emb = model.encode(user_query, normalize_embeddings=True)
   
   #possibility for there not to be any mention of course codes
+  # print (cid)
   if tags["course_codes"]:
     print("CID GET")
     chunks = SyllabusDAO.getFragmentsByCID(str(emb.tolist()), cid)
@@ -73,12 +76,19 @@ def get_context(user_query):
       context.append(f[3])
   else:
     print("NORMAL GET")
+    # keywordsList = tags["keywords"] #look for extracted keywords from user_query
+    # StringKeyword = ', '.join(keywordsList) #keywordsList is a list, so turn it into string to embed
+    # keywordEmbedding = model.encode(StringKeyword, normalize_embeddings=True)
+
+    # MixEmbed = 0.7 * keywordEmbedding + 0.3 * emb #makes sure to highlight the extracted keywords form the user query and add more weight to them
+    # MixEmbed = normalize_embeddings(MixEmbed) #normalizing
+
     chunks = SyllabusDAO.getFragments(str(emb.tolist()))
     for f in chunks:
       context.append(f[3])
   
   documents = "\\n".join(c for c in context)
-  # print(f"This is the retrieved doc: {documents}")
+  print(f"This is the retrieved doc: {documents}")
   return documents
 
 
@@ -96,13 +106,15 @@ def configure_page():
 
 
 def get_response(query, chat_history, documents):
-  template = """You are a devoted assistant whose main purpose is answering questions involving student curriculums
-    given the following documents, which are part of the syllabus based on the question.     
-    Read through it carefully and double check the math. Verify your math that grades actually add up to 100%.
-    Use any reference that it could be related to answer the query.
-    If you don't know the answer, just say that you don't know.
-    Answer with five sentences maximum or less and be concise
-    If it's something that you can list out, put them in bullet point format:
+  template = """Act as a IT help desk employee and use the documents given, not chat history to answer the question. 
+    Chat history is only used to recall what were previous questions, not previous answers.
+    The given documents are syllabuses that help answer the question.      
+    Read through it carefully.
+    Cite the source.
+    If it's something that you can list out, put them in bullet point format.
+: 
+
+  
 
     Documents: {documents} 
     Chat History (Use Only if Necessary): {chat_history}
@@ -112,7 +124,7 @@ def get_response(query, chat_history, documents):
   
   
   prompt = ChatPromptTemplate.from_template(template)
-  llm = ChatOllama(model="llama3.1:8b", temperature=0.3,)
+  llm = ChatOllama(model="llama3.1:8b", temperature=0.1,)
   chain = prompt | llm |  StrOutputParser()
   return chain.stream({
     "chat_history": chat_history,

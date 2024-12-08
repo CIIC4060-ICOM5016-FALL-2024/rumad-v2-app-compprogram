@@ -41,9 +41,8 @@ class SyllabusDAO:
         cursor.execute(query, (emb, cid))
         result = []
         for row in cursor:
-            result.append(row)
-            
-        print(f"This is the retrieved doc: {result}")
+            result.append(row)      
+        # print(f"This is the retrieved doc: {result}")
         return result
     
     #-------------------------------------------------
