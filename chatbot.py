@@ -1,6 +1,9 @@
 import streamlit as st
 import spacy
 import re
+import numpy as np
+import torch
+import torch.nn.functional as F
 from sentence_transformers.util import normalize_embeddings
 from spacy.matcher import Matcher
 from langchain_ollama import ChatOllama
@@ -88,6 +91,7 @@ def get_context(user_query):
   
   # print(tags["course_codes"])
   emb = model.encode(user_query, normalize_embeddings=True)
+  print(type(emb))
   
   #possibility for there not to be any mention of course codes
   # print (cid)
@@ -99,14 +103,28 @@ def get_context(user_query):
         context.append(f[3])
   else:
     print("NORMAL GET")
-    # keywordsList = tags["keywords"] #look for extracted keywords from user_query
-    # StringKeyword = ', '.join(keywordsList) #keywordsList is a list, so turn it into string to embed
-    # keywordEmbedding = model.encode(StringKeyword, normalize_embeddings=True)
+    query_weight = 0.3
+    topic_weight = 0.5
+    keyword_weight = 0.7
+    
+    topics = tags["topics"] # Save the list of topics extracted from memory
+    keywords = tags["keywords"] # Save the list of keywords extracted from memory
 
-    # MixEmbed = 0.7 * keywordEmbedding + 0.3 * emb #makes sure to highlight the extracted keywords form the user query and add more weight to them
-    # MixEmbed = normalize_embeddings(MixEmbed) #normalizing
+    topics = ', '.join(topics)
+    keywords= ', '.join(keywords) #keywordsList is a list, so turn it into string to embed
 
-    chunks = SyllabusDAO.getFragments(str(emb.tolist()))
+    #embedding 
+    topics_emb = model.encode(topics, normalize_embeddings=True)
+    key_emb = model.encode(keywords, normalize_embeddings=True)
+
+    weighted_embed = (keyword_weight * key_emb) + (topic_weight * topics_emb) + (query_weight * emb)  #makes sure to highlight the extracted keywords form the user query and add more weight to them
+    
+    # transforming into torch tensor type to normalize
+    weighted_embed = torch.from_numpy(weighted_embed)
+    weighted_embed = F.normalize(weighted_embed, p=2.0, dim=0)
+    
+
+    chunks = SyllabusDAO.getFragments(str(weighted_embed.tolist()))
     for f in chunks:
       context.append(f[3])
   
