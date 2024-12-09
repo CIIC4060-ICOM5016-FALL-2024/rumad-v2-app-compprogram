@@ -228,16 +228,14 @@ def display_messages():
     st.session_state.messages.append(AIMessage(ai_response))
 
   
-
-configure_page()
-make_sidebar()
-
-if(st.session_state.login_in == False):
+if (st.session_state.login_in == True):
+  configure_page()
+  display_messages()
+  
+else:
     st.write("Please log in to use the Chat Bot")
 
     if(st.button("Log in")):
         st.switch_page("Main_page.py")
-
-else:
-  
-  display_messages()
+        
+make_sidebar() 
