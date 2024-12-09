@@ -54,7 +54,7 @@ class SyllabusDAO:
         if result is None:
             print(f"No record found for CHUNKID: {chunkid}")  # Debug: Log missing record
             return {"error": f"No Syllabus found with CHUNKID {chunkid}"}, 404
-        print(result)
+        # print(result)
         return result
 
 

@@ -18,19 +18,27 @@ def extract_tags(query):
     # Process the query
     nlp = spacy.load("en_core_web_sm")
     matcher = Matcher(nlp.vocab) #Initialize matcher
-    patterns = [[{"POS": "PROPN", "LENGTH": 4}, {"DEP": "nummod", "LENGTH": 4}]] #Each ccode is length 4, and a numeric modifier of length 4
+    patterns = [
+        [{"POS": "PROPN", "LENGTH": 4}, {"DEP": "nummod", "LENGTH": 4}],
+        [{"SHAPE": "XXXXdddd"}],
+        [{"TEXT": {"REGEX": r"\b\w{4}(?:\s*[-_.:/,]+\s*)\d{4}\b"}}]
+                ] #Each ccode is length 4, and a numeric modifier of length 4
     matcher.add("COURSEID", patterns)
 
     query = query.upper() #makes everything in CAPS for normalizing
     doc = nlp(query) #processes query using a natural language process
     matches = matcher(doc)
-    # Extract tags based on named entities, keywords, and POS
+    # Extract tags based on named entities, keywords, and POS (Part of speech)
     # ent stands for entity. 
         
-    for match_id, start, end in matches:
-      string_id = nlp.vocab.strings[match_id]  # Get string representation
-      span = doc[start:end]  # The matched span
-      print(match_id, string_id, start, end, span.text) #Debug print
+    # for match_id, start, end in matches:
+    #   string_id = nlp.vocab.strings[match_id]  # Get string representation
+    #   span = doc[start:end]  # The matched span
+    #   print(match_id, string_id, start, end, span.text) #Debug print
+
+    for token in doc:
+      print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
+            token.shape_, token.is_alpha, token.is_stop)
 
     tags = {
         "course_codes": [doc[start:end].text for match_id, start, end in matches],
@@ -51,15 +59,29 @@ def get_context(user_query):
   model = SentenceTransformer("all-mpnet-base-v2")
 
   strings_to_parse = tags["course_codes"]
-  cid = 0
-
+  # print(strings_to_parse[0])
+  cid = []
   if strings_to_parse:
-    course_name = re.split(" ", strings_to_parse[0]) #tokenizes it so that we can know the name 
-      #You get this from the current file name
-    cname = course_name[0]
-    ccode = course_name[1]
-    # print(course_name)
-    cid = ClassDAO.GetCIDbyNameAndCode(cname, ccode)
+    for course in strings_to_parse:
+      #Tokenizes to match lookahead of digits, or hyphen
+      parsed_course = re.split(r'(-|\d+)', course)
+
+      #strips leading whitespace if possible
+      result = " ".join(part for part in parsed_course if part).strip()
+
+      #gets rid of any delimiter that could be used to indicate course code
+      result = re.sub(r"[-_.:/,]", "", result)
+      
+      course_name = re.split(" ", result) #tokenizes it so that we can know the name
+
+      #remove any extra whitespace, it might seem redundant, but its needed 
+      course_name = " ".join(part for part in course_name if part).strip()
+      course_name = re.split(" ", course_name)
+        #You get this from the current file name
+      cname = course_name[0]
+      ccode = course_name[1]
+      # print(course_name)
+      cid.append(ClassDAO.GetCIDbyNameAndCode(cname, ccode))
   # print(f"this is the cid: {cid}")
   
   context = []
@@ -71,9 +93,10 @@ def get_context(user_query):
   # print (cid)
   if tags["course_codes"]:
     print("CID GET")
-    chunks = SyllabusDAO.getFragmentsByCID(str(emb.tolist()), cid)
-    for f in chunks:
-      context.append(f[3])
+    for id in cid:
+      chunks = SyllabusDAO.getFragmentsByCID(str(emb.tolist()), id) #returns a list of chunks related to the asked syllabus
+      for f in chunks:
+        context.append(f[3])
   else:
     print("NORMAL GET")
     # keywordsList = tags["keywords"] #look for extracted keywords from user_query
@@ -88,7 +111,7 @@ def get_context(user_query):
       context.append(f[3])
   
   documents = "\\n".join(c for c in context)
-  print(f"This is the retrieved doc: {documents}")
+  # print(f"This is the retrieved context: {documents}")
   return documents
 
 
@@ -111,8 +134,8 @@ def get_response(query, chat_history, documents):
     The given documents are syllabuses that help answer the question.      
     Read through it carefully.
     Cite the source.
-    If it's something that you can list out, put them in bullet point format.
-: 
+    If there's no mention of the course in the provided documetnts, then it doesn't exist.
+    If it's something that you can list out, put them in bullet point format:
 
   
 
