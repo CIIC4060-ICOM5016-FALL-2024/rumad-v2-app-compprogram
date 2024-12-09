@@ -77,13 +77,6 @@ def get_context(user_query):
       context.append(f[3])
   else:
     print("NORMAL GET")
-    # keywordsList = tags["keywords"] #look for extracted keywords from user_query
-    # StringKeyword = ', '.join(keywordsList) #keywordsList is a list, so turn it into string to embed
-    # keywordEmbedding = model.encode(StringKeyword, normalize_embeddings=True)
-
-    # MixEmbed = 0.7 * keywordEmbedding + 0.3 * emb #makes sure to highlight the extracted keywords form the user query and add more weight to them
-    # MixEmbed = normalize_embeddings(MixEmbed) #normalizing
-
     chunks = SyllabusDAO.getFragments(str(emb.tolist()))
     for f in chunks:
       context.append(f[3])
@@ -107,8 +100,7 @@ def configure_page():
 
 
 def get_response(query, documents):
-  template = """Act as a IT help desk employee and use the documents given, not chat history to answer the question. 
-    Chat history is only used to recall what were previous questions, not previous answers.
+  template = """Act as a IT help desk employee and use the documents given to answer the question. 
     The given documents are syllabuses that help answer the question.
     If the answer is something that you can list out, put them in bullet point format.
 : 
@@ -117,7 +109,7 @@ def get_response(query, documents):
     """
 
   prompt = ChatPromptTemplate.from_template(template)
-  llm = ChatOllama(model="llama3.1:8b", temperature=0.1,)
+  llm = ChatOllama(model="llama3.1:8b", temperature=0,)
   chain = prompt | llm |  StrOutputParser()
   return chain.stream({
     "user_question": query,
