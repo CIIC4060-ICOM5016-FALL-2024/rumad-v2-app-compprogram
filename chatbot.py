@@ -101,6 +101,8 @@ def get_context(user_query):
       chunks = SyllabusDAO.getFragmentsByCID(str(emb.tolist()), id) #returns a list of chunks related to the asked syllabus
       for f in chunks:
         context.append(f[3])
+
+        
   else:
     print("NORMAL GET")
     query_weight = 0.3
