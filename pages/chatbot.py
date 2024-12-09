@@ -1,6 +1,9 @@
 import streamlit as st
 import spacy
 import re
+import numpy as np
+import torch
+import torch.nn.functional as F
 from sentence_transformers.util import normalize_embeddings
 from spacy.matcher import Matcher
 from langchain_ollama import ChatOllama
@@ -10,6 +13,7 @@ from Models.ClassModel import ClassDAO
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import HumanMessage, AIMessage
+from sidebar import make_sidebar
 
 
 #Adding Searchable Tags-------------------------------------
@@ -18,7 +22,11 @@ def extract_tags(query):
     # Process the query
     nlp = spacy.load("en_core_web_sm")
     matcher = Matcher(nlp.vocab) #Initialize matcher
-    patterns = [[{"POS": "PROPN", "LENGTH": 4}, {"DEP": "nummod", "LENGTH": 4}]] #Each ccode is length 4, and a numeric modifier of length 4
+    patterns = [
+        [{"POS": "PROPN", "LENGTH": 4}, {"DEP": "nummod", "LENGTH": 4}],
+        [{"SHAPE": "XXXXdddd"}],
+        [{"TEXT": {"REGEX": r"\b\w{4}(?:\s*[-_.:/,]+\s*)\d{4}\b"}}]
+                ]  #Each ccode is length 4, and a numeric modifier of length 4
     matcher.add("COURSEID", patterns)
 
     query = query.upper() #makes everything in CAPS for normalizing
@@ -27,10 +35,10 @@ def extract_tags(query):
     # Extract tags based on named entities, keywords, and POS
     # ent stands for entity. 
         
-    for match_id, start, end in matches:
-      string_id = nlp.vocab.strings[match_id]  # Get string representation
-      span = doc[start:end]  # The matched span
-      print(match_id, string_id, start, end, span.text) #Debug print
+    # for match_id, start, end in matches:
+    #   string_id = nlp.vocab.strings[match_id]  # Get string representation
+    #   span = doc[start:end]  # The matched span
+    #   print(match_id, string_id, start, end, span.text) #Debug print
 
     tags = {
         "course_codes": [doc[start:end].text for match_id, start, end in matches],
@@ -51,15 +59,29 @@ def get_context(user_query):
   model = SentenceTransformer("all-mpnet-base-v2")
 
   strings_to_parse = tags["course_codes"]
-  cid = 0
-
+  # print(strings_to_parse[0])
+  cid = []
   if strings_to_parse:
-    course_name = re.split(" ", strings_to_parse[0]) #tokenizes it so that we can know the name 
-      #You get this from the current file name
-    cname = course_name[0]
-    ccode = course_name[1]
-    # print(course_name)
-    cid = ClassDAO.GetCIDbyNameAndCode(cname, ccode)
+    for course in strings_to_parse:
+      #Tokenizes to match lookahead of digits, or hyphen
+      parsed_course = re.split(r'(-|\d+)', course)
+
+      #strips leading whitespace if possible
+      result = " ".join(part for part in parsed_course if part).strip()
+
+      #gets rid of any delimiter that could be used to indicate course code
+      result = re.sub(r"[-_.:/,]", "", result)
+      
+      course_name = re.split(" ", result) #tokenizes it so that we can know the name
+
+      #remove any extra whitespace, it might seem redundant, but its needed 
+      course_name = " ".join(part for part in course_name if part).strip()
+      course_name = re.split(" ", course_name)
+        #You get this from the current file name
+      cname = course_name[0]
+      ccode = course_name[1]
+      # print(course_name)
+      cid.append(ClassDAO.GetCIDbyNameAndCode(cname, ccode))
   # print(f"this is the cid: {cid}")
   
   context = []
@@ -71,24 +93,43 @@ def get_context(user_query):
   # print (cid)
   if tags["course_codes"]:
     print("CID GET")
-    chunks = SyllabusDAO.getFragmentsByCID(str(emb.tolist()), cid)
-    for f in chunks:
-      context.append(f[3])
+    for id in cid:
+      chunks = SyllabusDAO.getFragmentsByCID(str(emb.tolist()), id) #returns a list of chunks related to the asked syllabus
+      for f in chunks:
+        context.append(f[3])
+
+        
   else:
     print("NORMAL GET")
-    # keywordsList = tags["keywords"] #look for extracted keywords from user_query
-    # StringKeyword = ', '.join(keywordsList) #keywordsList is a list, so turn it into string to embed
-    # keywordEmbedding = model.encode(StringKeyword, normalize_embeddings=True)
+    query_weight = 0.4
+    topic_weight = 0.3
+    keyword_weight = 0.3
+    
+    topics = tags["topics"] # Save the list of topics extracted from memory
+    keywords = tags["keywords"] # Save the list of keywords extracted from memory
 
-    # MixEmbed = 0.7 * keywordEmbedding + 0.3 * emb #makes sure to highlight the extracted keywords form the user query and add more weight to them
-    # MixEmbed = normalize_embeddings(MixEmbed) #normalizing
+    topics = ', '.join(topics)
+    keywords= ', '.join(keywords) #keywordsList is a list, so turn it into string to embed
 
-    chunks = SyllabusDAO.getFragments(str(emb.tolist()))
+    #embedding 
+    topics_emb = model.encode(topics, normalize_embeddings=True)
+    key_emb = model.encode(keywords, normalize_embeddings=True)
+    
+
+    weighted_embed = (keyword_weight * key_emb) + (topic_weight * topics_emb) + (query_weight * emb)  #makes sure to highlight the extracted keywords form the user query and add more weight to them
+    
+    # transforming into torch tensor type to normalize
+    weighted_embed = torch.from_numpy(weighted_embed)
+    weighted_embed = F.normalize(weighted_embed, p=2.0, dim=0)
+    # print(type(weighted_embed))
+    # weighted_embed = weighted_embed.numpy()
+    print(type(weighted_embed))
+    chunks = SyllabusDAO.getFragments(str(weighted_embed.tolist()))
     for f in chunks:
       context.append(f[3])
   
   documents = "\\n".join(c for c in context)
-  print(f"This is the retrieved doc: {documents}")
+  # print(f"This is the retrieved context: {documents}")
   return documents
 
 
@@ -106,8 +147,7 @@ def configure_page():
 
 
 def get_response(query, documents):
-  template = """Act as a IT help desk employee and use the documents given, not chat history to answer the question. 
-    Chat history is only used to recall what were previous questions, not previous answers.
+  template = """Act as a IT help desk employee and use the documents given to answer the question. 
     The given documents are syllabuses that help answer the question.
     If the answer is something that you can list out, put them in bullet point format.
 : 
@@ -184,4 +224,13 @@ def display_messages():
   
 
 configure_page()
-display_messages()
+make_sidebar()
+
+if(st.session_state.login_in == False):
+    st.write("Please log in to use the Chat Bot")
+
+    if(st.button("Log in")):
+        st.switch_page("Main_page.py")
+
+else:
+  display_messages()

@@ -17,7 +17,7 @@ else:
 
 
     try:
-        rid = st.text_input("Insert CID")
+        rid = st.text_input("Insert RID")
 
         Controller = MostClassPerRoomController()
         isClicked = st.button("Send data") or rid
@@ -29,7 +29,7 @@ else:
             data = pd.DataFrame(
                 {
                     "Students": [r["students"] for r in result],
-                    "Class_Info": [f"CID: {r['cid']}, Class Name: {r['class Name']}, Room:{r['room_number']}" for r in result]  # Creating a new column called room_info
+                    "Class_Info": [f"RID: {r['rid']}, Class Name: {r['class Name']}, Room:{r['room_number']}" for r in result]  # Creating a new column called room_info
                     #contains the rid and the room_number
                 }
             )
@@ -39,10 +39,10 @@ else:
     except:
         try:
             int(rid)
-            st.write("Cid was not found")
+            st.write("RID was not found")
         
         except:
-            st.write("Cid must be a number")
+            st.write("RID must be a number")
 
 
             

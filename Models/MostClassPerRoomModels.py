@@ -5,7 +5,7 @@ class MostClassPerRoomDAO:
         self.connection = psycopg2.connect(**db_params)
         self.cursor = self.connection.cursor()
         
-    def GET_Most_Class_Per_Room(self,cid):
+    def GET_Most_Class_Per_Room(self, rid): 
         query = """SELECT concat(class.cname,' ',class.ccode) as ClassName, class.cdesc, room_number, sum(section.capacity) as students
                     FROM class
                     INNER JOIN section
@@ -16,16 +16,16 @@ class MostClassPerRoomDAO:
                     GROUP BY class.cdesc, room_number,class.ccode,class.cname
                     ORDER BY students DESC
                     LIMIT 3;"""
-        self.cursor.execute(query,(cid,))
+        self.cursor.execute(query,(rid,))
         result = self.cursor.fetchall()
         if len(result) == 0:
             return Exception
         return result
     
     
-    def Make_Dictionary(self,data,cid):
+    def Make_Dictionary(self,data,rid):
         result = {}
-        result["cid"] = int(cid)
+        result["rid"] = int(rid)
         result["class Name"] = data[0]
         result["cdesc"] = data[1]
         result["room_number"] = data[2]
