@@ -39,9 +39,9 @@ def extract_tags(query):
     #   span = doc[start:end]  # The matched span
     #   print(match_id, string_id, start, end, span.text) #Debug print
 
-    for token in doc:
-      print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
-            token.shape_, token.is_alpha, token.is_stop)
+    # for token in doc:
+    #   print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
+    #         token.shape_, token.is_alpha, token.is_stop)
 
     tags = {
         "course_codes": [doc[start:end].text for match_id, start, end in matches],
@@ -91,7 +91,6 @@ def get_context(user_query):
   
   # print(tags["course_codes"])
   emb = model.encode(user_query, normalize_embeddings=True)
-  print(type(emb))
   
   #possibility for there not to be any mention of course codes
   # print (cid)
@@ -105,9 +104,9 @@ def get_context(user_query):
         
   else:
     print("NORMAL GET")
-    query_weight = 0.3
-    topic_weight = 0.5
-    keyword_weight = 0.7
+    query_weight = 0.4
+    topic_weight = 0.3
+    keyword_weight = 0.3
     
     topics = tags["topics"] # Save the list of topics extracted from memory
     keywords = tags["keywords"] # Save the list of keywords extracted from memory
@@ -118,14 +117,16 @@ def get_context(user_query):
     #embedding 
     topics_emb = model.encode(topics, normalize_embeddings=True)
     key_emb = model.encode(keywords, normalize_embeddings=True)
+    
 
     weighted_embed = (keyword_weight * key_emb) + (topic_weight * topics_emb) + (query_weight * emb)  #makes sure to highlight the extracted keywords form the user query and add more weight to them
     
     # transforming into torch tensor type to normalize
     weighted_embed = torch.from_numpy(weighted_embed)
     weighted_embed = F.normalize(weighted_embed, p=2.0, dim=0)
-    
-
+    # print(type(weighted_embed))
+    # weighted_embed = weighted_embed.numpy()
+    print(type(weighted_embed))
     chunks = SyllabusDAO.getFragments(str(weighted_embed.tolist()))
     for f in chunks:
       context.append(f[3])
@@ -153,6 +154,7 @@ def get_response(query, documents):
     Chat history is only used to recall what were previous questions, not previous answers.
     The given documents are syllabuses that help answer the question.
     If the answer is something that you can list out, put them in bullet point format.
+    If the User question asks about grade division, evaluation strategy, grading system, only answer if the course code is provided in the user question, otherwise ask the user for the course code.
 : 
     Documents: {documents} 
     User question: {user_question}

@@ -16,7 +16,7 @@ model = SentenceTransformer("all-mpnet-base-v2")
 
 
 #If your root folder is rumadv2, just put in syllabuses
-files = listdir(r"syllabuses")
+files = listdir(r"rumad-v2-app-compprogram/syllabuses")
 print(files)
 
 #extract chunks
@@ -79,7 +79,7 @@ SyllabusDAO = SyllabusDAO()
 
 for f in files:
     # this variables also was changed
-    fname = r"syllabuses/" + f
+    fname = r"rumad-v2-app-compprogram/syllabuses/" + f
     print(f)
     #parsing file -----------------------------------------
     string_to_parse = f
