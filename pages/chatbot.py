@@ -15,6 +15,9 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import HumanMessage, AIMessage
 from sidebar import make_sidebar
 
+if "login_in" not in st.session_state:
+    st.session_state.login_in = False
+
 
 #Adding Searchable Tags-------------------------------------
 
@@ -143,6 +146,9 @@ def configure_page():
     initial_sidebar_state="expanded"
   )
   st.title("Chatting with Ollama")
+  st.write("For more accurate information please provide the course name and code.")
+  st.write("Ex: How are the grades divided in CIIC 4020?")
+
 
 
 
@@ -192,7 +198,7 @@ def display_messages():
        with st.chat_message("AI"):
         st.markdown(message.content)
 
-  user_query = st.chat_input("Message Ollama")
+  user_query = st.chat_input("To ask about previous message, use Chat History: <your messge>")
   
   
   if user_query is not None and user_query != "" and user_query.lower().startswith("chat history:"):
@@ -233,4 +239,5 @@ if(st.session_state.login_in == False):
         st.switch_page("Main_page.py")
 
 else:
+  
   display_messages()

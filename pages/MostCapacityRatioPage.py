@@ -5,6 +5,9 @@ import plotly_express as px
 from sidebar import make_sidebar
 make_sidebar()
 
+if "login_in" not in st.session_state:
+    st.session_state.login_in = False
+
 if(st.session_state.login_in == False):
     st.write("Please log in to see the data")
 
