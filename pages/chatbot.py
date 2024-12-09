@@ -10,6 +10,7 @@ from Models.ClassModel import ClassDAO
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import HumanMessage, AIMessage
+from sidebar import make_sidebar
 
 
 #Adding Searchable Tags-------------------------------------
@@ -181,7 +182,14 @@ def display_messages():
 
     st.session_state.messages.append(AIMessage(ai_response))
 
-  
+configure_page() 
+make_sidebar()
 
-configure_page()
-display_messages()
+if(st.session_state.login_in == False):
+    st.write("Please log in to use the Chat Bot")
+
+    if(st.button("Log in")):
+        st.switch_page("Main_page.py")
+
+else:
+  display_messages()

@@ -6,7 +6,7 @@ class MostClassPerSemesterYearDAO:
         self.cursor = self.connection.cursor()
         
     def GET_Most_CLass_Per_Semester_Year(self,years,semester):
-        query = """SELECT CONCAT(class.ccode , ' ',class.cname),section.semester,section.years,cdesc,count(*) as Class_Count
+        query = """SELECT CONCAT(class.cname , ' ',class.ccode),section.semester,section.years,cdesc,count(*) as Class_Count
                     FROM CLASS
                     INNER JOIN SECTION
                     ON SECTION.CID = CLASS.CID
@@ -22,11 +22,18 @@ class MostClassPerSemesterYearDAO:
         return result
     
     
+    def GET_Years(self):
+        query = """select distinct years from section
+                   order by years;"""
+        self.cursor.execute(query)
+        data = self.cursor.fetchall()
+        return data
+
     def Make_Dictionary(self,data):
         result = {}
         result["Class Name"] = data[0]
-        result["cdesc"] = data[0]
         result["semester"] = data[1]
         result["years"] = data[2]
-        result["Class Count"] = data[3]
+        result["cdesc"] = data[3]
+        result["Class Count"] = data[4]
         return result

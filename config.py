@@ -1,11 +1,11 @@
 import psycopg2
-# db_params = {
-#     'dbname': 'DBProject',
-#     'user': 'tito',
-#     'password': 'tito123',
-#     'host': 'localhost', 
-#     'port': '5432'
-# }
+db_params = {
+    'dbname': 'dbtest',
+    'user': 'dbuser',
+    'password': 'dbtest',
+    'host': 'localhost', 
+    'port': '9090'
+}
 #Heroku APP---------------------------
 # db_params = {
 #     'dbname': 'da3hnfjaj3h53v',
@@ -17,13 +17,13 @@ import psycopg2
 
 
 #Heroku DATABASE---------------------------
-db_params = {
-    'dbname': 'dcm05lpjv8pjes',
-    'user': 'uemem33ha8a7p1',
-    'password': 'p8256ddcde369b02ab7709e1043d240da46c6e4607223a04cf2f9d9f9eb964729',
-    'host': 'c3cj4hehegopde.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', 
-    'port': '5432'
-}
+# db_params = {
+#     'dbname': 'dcm05lpjv8pjes',
+#     'user': 'uemem33ha8a7p1',
+#     'password': 'p8256ddcde369b02ab7709e1043d240da46c6e4607223a04cf2f9d9f9eb964729',
+#     'host': 'c3cj4hehegopde.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', 
+#     'port': '5432'
+# }
 
 # Host: c3cj4hehegopde.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com
 # Database: dcm05lpjv8pjes

@@ -1,8 +1,9 @@
 #--------------------#IMPORTS#--------------------#
 
 from flask import Flask,render_template,jsonify,request
+import streamlit as st
+from pages import *
 #------------CONTROLLERS----------------------------------------------------
-
 from Controllers.ClassController import ClassController
 from Controllers.SectionController import SectionController
 from Controllers.MeetingController import MeetingController
@@ -29,6 +30,7 @@ CORS(app)
 @app.route("/")
 def home():
     return "Welcome to the New Putty"
+
 #----------------TABLE CLASS------------------------------------------------------------------------------------
 
 @app.route("/compprogram/class",methods=["GET","POST"])
@@ -408,5 +410,6 @@ def GET_SECTIONS_PER_YEAR():
     controller = SectionsPerYearController()
     return jsonify(controller.GET_SECTIONS_PER_YEAR())
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False,threaded=True)
