@@ -133,7 +133,7 @@ for f in files:
 
 
     for t in token_split_texts:
-        # t = t.replace("[UNK]", " ")
+        t = t.replace("[UNK]", " ")
         emb = model.encode(t, normalize_embeddings=True)
         print(t)
         SyllabusDAO.insertFragment(cid, emb.tolist(), t)
