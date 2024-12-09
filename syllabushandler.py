@@ -1,5 +1,6 @@
 from pypdf import PdfReader
 import fitz
+import unicodedata
 import re
 from os import listdir
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
@@ -15,13 +16,15 @@ model = SentenceTransformer("all-mpnet-base-v2")
 
 
 #If your root folder is rumadv2, just put in syllabuses
-files = listdir(r"rumad-v2-app-compprogram/syllabuses")
+files = listdir(r"syllabuses")
 print(files)
 
 #extract chunks
 
 unwanted_data = [
+    r"\[UNK\]",
     r"12\.\s*a.*",
+    r"☐.*?\n",
     r"13\.\s* Academic[\s\S]*Integrity[\s\S]*?(?=UPR Students General Bylaws)",
     r"the\s*university\s*+of\s*puerto\s*rico\s*promotes[\s\S]*?(?=UPR Students General Bylaws)"
     r"According\s*to\s*Law\s*51.*?(?=\n13.)",
@@ -35,25 +38,26 @@ def normalize_text(text):
     and normalizing whitespace.
     """
     # Replace non-breaking spaces and tabs with standard spaces
+
     text = text.replace("\u00A0", " ").replace("\t", " ")
     
 
     # Remove unwanted non-ASCII characters while keeping Spanish characters
-    # Keep Latin-1 Supplement and Latin Extended-A ranges (includes Spanish special characters)
-    text = re.sub(r"[^\w\sáéíóúüñÁÉÍÓÚÜÑ.,%!?¿¡-]", "", text)
+    text = re.sub(r"[^\w\sáéíóúüñÁÉÍÓÚÜÑ.,%!☐?¿¡-]", "", text)
     # text = re.sub(r"^(☒|☐)\s*.+\s+\d+%$", ",", text)
     
     # Collapse multiple spaces into a single space
     # text = re.sub(r"\s+", " ", text)
-    
-    # Trim leading and trailing whitespace
-    return text.strip()
+
+    text = text.strip()
+    return text
 
 
 def remove_unwanted_data(text):
     text = normalize_text(text)
     for pattern in unwanted_data:
         text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+
     return text
 
 
@@ -75,7 +79,7 @@ SyllabusDAO = SyllabusDAO()
 
 for f in files:
     # this variables also was changed
-    fname = r"rumad-v2-app-compprogram/syllabuses/" + f
+    fname = r"syllabuses/" + f
     print(f)
     #parsing file -----------------------------------------
     string_to_parse = f
@@ -129,6 +133,7 @@ for f in files:
 
 
     for t in token_split_texts:
+        # t = t.replace("[UNK]", " ")
         emb = model.encode(t, normalize_embeddings=True)
         print(t)
         SyllabusDAO.insertFragment(cid, emb.tolist(), t)

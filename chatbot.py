@@ -105,31 +105,37 @@ def configure_page():
 
 
 
-def get_response(query, chat_history, documents):
+def get_response(query, documents):
   template = """Act as a IT help desk employee and use the documents given, not chat history to answer the question. 
     Chat history is only used to recall what were previous questions, not previous answers.
-    The given documents are syllabuses that help answer the question.      
-    Read through it carefully.
-    Cite the source.
-    If it's something that you can list out, put them in bullet point format.
+    The given documents are syllabuses that help answer the question.
+    If the answer is something that you can list out, put them in bullet point format.
 : 
-
-  
-
     Documents: {documents} 
-    Chat History (Use Only if Necessary): {chat_history}
     User question: {user_question}
     """
-  
-  
-  
+
   prompt = ChatPromptTemplate.from_template(template)
   llm = ChatOllama(model="llama3.1:8b", temperature=0.1,)
   chain = prompt | llm |  StrOutputParser()
   return chain.stream({
-    "chat_history": chat_history,
     "user_question": query,
     "documents": documents
+  })
+
+
+def get_response_history(query, chat_history):
+  template = """ You are a helpful assistant. Answer the following question considering the history of this conversation
+: 
+    Chat History: {chat_history} 
+    User question: {user_question}
+    """
+  prompt = ChatPromptTemplate.from_template(template)
+  llm = ChatOllama(model="llama3.1:8b", temperature=0.1,)
+  chain = prompt | llm |  StrOutputParser()
+  return chain.stream({
+    "user_question": query,
+    "chat_history": chat_history
   })
 
 
@@ -149,8 +155,20 @@ def display_messages():
   user_query = st.chat_input("Message Ollama")
   
   
+  if user_query is not None and user_query != "" and user_query.lower().startswith("chat history:"):
+    st.session_state.messages.append(HumanMessage(user_query))
 
-  if user_query is not None and user_query != "":
+    with st.chat_message("Human"):
+      st.markdown(user_query)
+
+    with st.chat_message("AI"):
+      history = st.session_state.messages
+      ai_response = st.write_stream(get_response_history(user_query, history))
+
+    st.session_state.messages.append(AIMessage(ai_response))
+
+
+  elif user_query is not None and user_query != "":
     
     st.session_state.messages.append(HumanMessage(user_query))
 
@@ -159,7 +177,7 @@ def display_messages():
 
     with st.chat_message("AI"):
       documents = get_context(user_query)
-      ai_response = st.write_stream(get_response(user_query, st.session_state.messages, documents))
+      ai_response = st.write_stream(get_response(user_query, documents))
 
     st.session_state.messages.append(AIMessage(ai_response))
 
